@@ -1,0 +1,19 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+node_modules/
+dist/
+.build/
+
+# React
+grid_scope_frontend/node_modules/
+build/
+
+# Django
+*.sqlite3
+.env

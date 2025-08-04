@@ -1,0 +1,23 @@
+# Pliki Pythona
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.sqlite3
+
+# Pliki systemowe i edytorów
+*.DS_Store
+*.idea/
+.vscode/
+*.env
+
+# Foldery środowisk wirtualnych
+venv/
+env/
+.env/
+
+# Logi
+*.log
+
+# Dockerfile i docker-compose nie są ignorowane, bo potrzebne przy buildzie
