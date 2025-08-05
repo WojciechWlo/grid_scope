@@ -36,5 +36,17 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
+  mssql_init:
+    build:
+      context: ./mssql_init
+    depends_on:
+      - mssql
+    volumes:
+      - ./mssql_init/initdb.sql:/initdb.sql
+    environment:
+      - SA_PASSWORD=YourStrong!Passw0rd
+    entrypoint: ["/bin/bash", "/init.sh"]
+
+
 volumes:
   mssql_data:

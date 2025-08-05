@@ -9,7 +9,7 @@ port="$1"
 shift
 
 until nc -z "$host" "$port"; do
-  echo "Czekam na $host:$port..."
+  echo "Waiting for $host:$port..."
   sleep 1
 done
 
