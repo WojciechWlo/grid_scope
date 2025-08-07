@@ -19,5 +19,3 @@ until sqlcmd -S mssql -U sa -P YourStrong!Passw0rd -N -C -Q "SELECT name FROM sy
   echo "Waiting for database 'grid_scope_db' to be created..."
   sleep 2
 done
-
-exec "$@"
