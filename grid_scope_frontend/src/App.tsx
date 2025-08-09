@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import HomeScreen from './screens/HomeScreen';
 import SpreadsheetOutListScreen from './screens/SpreadsheetOutListScreen';
 import SpreadsheetInListScreen from './screens/SpreadsheetInListScreen';
+import SpreadsheetListScreen from './screens/SpreadsheetListScreen';
 import LoginScreen from './screens/LoginScreen';
 
 function App() {
@@ -19,8 +20,9 @@ function App() {
 						<Container className="py-5">
 							<Routes>
 								<Route path='/' element={<HomeScreen/>} />
-								<Route path='/spreadsheetoutlist' element={<SpreadsheetOutListScreen/>} />
+								<Route path='/spreadsheetlist' element={<SpreadsheetListScreen/>} />
 								<Route path='/spreadsheetinlist' element={<SpreadsheetInListScreen/>} />
+								<Route path='/spreadsheetoutlist' element={<SpreadsheetOutListScreen/>} />								
 								<Route path='/login' element={<LoginScreen/>} />
 							</Routes>
 						</Container>

@@ -38,11 +38,21 @@ def validate_excel_range(value):
         raise ValidationError("Row range must be between 1 and 1048576")
 
 
-class SpreadsheetIn(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
-    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
+class Key(models.Model):
     key = models.CharField(max_length=100, null=False, blank=False)
+
+
+class Spreadsheet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
+    key = models.ForeignKey(Key, on_delete=models.CASCADE, null=False, blank=False)
+    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     url = models.URLField(max_length=100,null=False, blank=False)
+
+
+class SpreadsheetIn(models.Model):
+    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    Spreadsheet = models.ForeignKey(Spreadsheet,on_delete=models.CASCADE, null=False, blank=False)
+
     col_header_cell_range = models.CharField(
         max_length=25,
         validators=[validate_excel_range],
@@ -58,10 +68,8 @@ class SpreadsheetIn(models.Model):
         return self.label
 
 class SpreadsheetOut(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
-    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
-    key = models.CharField(max_length=100, null=False, blank=False)
-    url = models.URLField(max_length=100,null=False, blank=False)
-
+    label = models.CharField(max_length=100, unique=True, null=False, blank=False)    
+    Spreadsheet = models.ForeignKey(Spreadsheet,on_delete=models.CASCADE, null=False, blank=False)
+    
     def __str__(self):
         return self.label
