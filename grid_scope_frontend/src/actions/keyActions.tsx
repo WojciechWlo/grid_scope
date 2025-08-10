@@ -1,18 +1,18 @@
 import axios, { AxiosError } from 'axios';
 import { RootState,AppDispatch } from '../store';
 import {
-    spreadsheetListRequest,
-    spreadsheetListSuccess,
-    spreadsheetListFail,
-    spreadsheetCreateRequest,
-    spreadsheetCreateSuccess,
-    spreadsheetCreateFail,
-} from '../reducers/spreadsheetSlices'; 
+    keyListRequest,
+    keyListSuccess,
+    keyListFail,
+    keyCreateRequest,
+    keyCreateSuccess,
+    keyCreateFail,
+} from '../reducers/keySlices'; 
 
 
-export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
-        dispatch(spreadsheetListRequest());
+        dispatch(keyListRequest());
 
         console.log(keyword)
         const {
@@ -27,31 +27,32 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets${keyword}`,
+            `http://127.0.0.1:8000/api/spreadsheets/keys${keyword}`,
             config
         );
 
-        dispatch(spreadsheetListSuccess(data));
+        console.log(data)
+
+        dispatch(keyListSuccess(data));
 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        spreadsheetListFail(
+        keyListFail(
             error.response && error.response.data.detail ? error.response.data.detail : error.message
         )
         );
     }
 };
 
-type SpreadsheetCreateType={
+type KeyCreateType={
     label:string, 
-    url:string, 
     key:string
 }
 
-export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const createKey = (keyCreate: KeyCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
-        dispatch(spreadsheetCreateRequest());
+        dispatch(keyCreateRequest());
 
         const {
             userLogin:{userInfo},
@@ -65,17 +66,17 @@ export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => a
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/spreadsheets/create`,
-            spreadsheetCreate,
+            `http://127.0.0.1:8000/api/spreadsheets/keys/create`,
+            keyCreate,
             config
         );
 
-        dispatch(spreadsheetCreateSuccess(data));
+        dispatch(keyCreateSuccess(data));
 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        spreadsheetCreateFail(
+        keyCreateFail(
             error.response && error.response.data.detail ? error.response.data.detail : error.message
         )
         );

@@ -19,7 +19,7 @@ export const login = (username: string, password: string) => async (dispatch: Ap
         };
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/users/login/',
+        'http://127.0.0.1:8000/api/users/login',
         { username, password },
         config
         );
@@ -36,7 +36,7 @@ export const login = (username: string, password: string) => async (dispatch: Ap
     }
 };
 
-export const logoutUser = () => (dispatch: AppDispatch) => {
+export const logout = () => (dispatch: AppDispatch) => {
     localStorage.removeItem('userInfo');
     dispatch(userLogout());
 

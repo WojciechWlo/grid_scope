@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from spreadsheets.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet
+from spreadsheets.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet, Key
 #from rest_framework_simplejwt.tokens import RefreshToken
 
 class SpreadsheetInSerializer(serializers.ModelSerializer):
@@ -16,4 +16,9 @@ class SpreadsheetOutSerializer(serializers.ModelSerializer):
 class SpreadsheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spreadsheet
+        fields = '__all__'
+
+class KeySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Key
         fields = '__all__'

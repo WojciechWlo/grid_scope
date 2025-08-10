@@ -1,12 +1,15 @@
 // userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {  SpreadsheetListState } from '../interfaces/spreadsheetInterfaces';
+import { 
+	SpreadsheetListState,
+	SpreadsheetCreateState,
+} from '../interfaces/spreadsheetInterfaces';
 
-const initialState: SpreadsheetListState = {};
+const initialListState: SpreadsheetListState = {};
 
 const spreadsheetListSlice = createSlice({
 	name: 'spreadsheetList',
-	initialState,
+	initialState: initialListState,
 	reducers: {
 		spreadsheetListRequest(state) {
 			state.loading = true;
@@ -31,4 +34,36 @@ export const {
 	spreadsheetListFail
 } = spreadsheetListSlice.actions;
 
-export default spreadsheetListSlice.reducer;
+export const spreadsheetListReducer = spreadsheetListSlice.reducer;
+
+const initialCreateState: SpreadsheetCreateState = {};
+
+const spreadsheetCreateSlice = createSlice({
+	name: 'spreadsheetList',
+	initialState:initialCreateState,
+	reducers: {
+		spreadsheetCreateRequest(state) {
+			state.loading = true;
+			state.error = undefined;
+			state.error = undefined;
+		},
+		spreadsheetCreateSuccess(state, action: PayloadAction<SpreadsheetCreateState>) {
+			state.loading = false;
+			state.response = action.payload;
+			state.error = undefined;
+		},
+		spreadsheetCreateFail(state, action: PayloadAction<string>) {
+			state.loading = false;
+			state.error = action.payload;
+			state.response = undefined;
+		}
+	},
+});
+
+export const {
+	spreadsheetCreateRequest,
+	spreadsheetCreateSuccess,
+	spreadsheetCreateFail
+} = spreadsheetCreateSlice.actions;
+
+export const spreadsheetCreateReducer = spreadsheetCreateSlice.reducer;

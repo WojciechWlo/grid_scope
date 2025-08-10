@@ -4,18 +4,18 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Table, Button, Row, Col} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import type { RootState,AppDispatch } from '../store'
-import { listSpreadsheets } from '../actions/spreadsheetActions'
+import { listKeys } from '../actions/keyActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
 
-type Spreadsheet={
+type Key={
     id: number,
     label: string,
-    url: string
+    key: string,
 }
 
-function SpreadsheetListScreen() {
+function KeyListScreen() {
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
     const location = useLocation()
@@ -23,29 +23,27 @@ function SpreadsheetListScreen() {
     const userLogin = useSelector((state: RootState)=>state.userLogin)
     const {userInfo} = userLogin
 
-    const spreadsheetList = useSelector((state: RootState)=>state.spreadsheetList)
-    const {loading, error, spreadsheets=null, pages, page} = spreadsheetList
+    const keyList = useSelector((state: RootState)=>state.keyList)
+    const {loading, error, keys=null, pages, page} = keyList
 
     let keyword = location.search
 
     useEffect(()=>{
         if(userInfo){
-            dispatch(listSpreadsheets(keyword))
+            dispatch(listKeys(keyword))
         }
        
 
     },[dispatch, userInfo, keyword])
 
 
-
-
-	const addSpreadsheetHandler = ()=>{
-        navigate("/addspreadsheet")
+	const addKeyHandler = ()=>{
+        navigate("/addkey")
 	}
-	const editSpreadsheetHandler = (id:number)=>{
+	const editKeyHandler = (id:number)=>{
 
 	}
-	const deleteSpreadsheetHandler = (id:number)=>{
+	const deleteKeyHandler = (id:number)=>{
 
 	}
     return (
@@ -53,11 +51,11 @@ function SpreadsheetListScreen() {
         <div>
             <Row className='align-items-center'>
                 <Col>
-                    <h1>Spreadsheets</h1>
+                    <h1>Keys</h1>
                 </Col>
                 <Col className='text-right'>
-                    <Button className='my-3' onClick={()=>addSpreadsheetHandler()}>
-                        <i className='fas fa-plus'></i> Add Spreadsheet
+                    <Button className='my-3' onClick={()=>addKeyHandler()}>
+                        <i className='fas fa-plus'></i> Add Key
                     </Button>
                 </Col>
             </Row>
@@ -70,23 +68,23 @@ function SpreadsheetListScreen() {
                                 <tr>
                                     <th>ID</th>
                                     <th>LABEL</th>
-                                    <th>URL</th>
+                                    <th>Key</th>
                                     <th></th>
                                 </tr>
 
                             </thead>
                             <tbody>
-                                {(spreadsheets || []).map((spreadsheet: Spreadsheet) => (
-                                    <tr key={spreadsheet.id}>
-                                        <td>{spreadsheet.id}</td>
-                                        <td>{spreadsheet.label}</td>
-                                        <td>{spreadsheet.url}</td>
+                                {(keys || []).map((key: Key) => (
+                                    <tr key={key.id}>
+                                        <td>{key.id}</td>
+                                        <td>{key.label}</td>
+                                        <td>{key.key}</td>
                                         <td>
-                                            <Button variant='light' className='btn-sm' onClick={()=>editSpreadsheetHandler(spreadsheet.id)}>
+                                            <Button variant='light' className='btn-sm' onClick={()=>editKeyHandler(key.id)}>
                                                 <i className='fas fa-edit'></i>
                                             </Button>
 
-                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteSpreadsheetHandler (spreadsheet.id)}>
+                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteKeyHandler (key.id)}>
                                                 <i className='fas fa-trash'></i>
                                             </Button>
                                         </td>                                        
@@ -102,5 +100,4 @@ function SpreadsheetListScreen() {
 		</div>
     )
 }
-
-export default SpreadsheetListScreen
+export default KeyListScreen

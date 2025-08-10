@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react'
-import {Form, Button, Row, Col} from 'react-bootstrap'
+import {Form, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
-import {Link, useNavigate, useLocation } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {login} from '../actions/userActions'
 import type { RootState,AppDispatch } from '../store'
+import Loader from '../components/Loader'
+import Message from '../components/Message'
 
 function LoginScreen() {
-    const location = useLocation()
     const navigate = useNavigate()
     const redirect = '/'
     
@@ -34,8 +35,8 @@ function LoginScreen() {
     return (
         <FormContainer>
             <h1>Sign In</h1>
-            {/*error && <Message variant='danger'>{error}</Message>*/}
-            {/*loading && <Loader/>*/}
+            {error && <Message variant='danger'>{error}</Message>}
+            {loading && <Loader/>}
             <Form onSubmit={submitHandler}>
                 
                 <Form.Group controlId='username'>

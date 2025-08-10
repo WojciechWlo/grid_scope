@@ -18,12 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 
 api_patterns = [
-    path('spreadsheets/', include('spreadsheets.urls')),
-    path('users/', include('users.urls')),
+    path('spreadsheets', include('spreadsheets.urls')),
+    path('users', include('users.urls')),
 ]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('spreadsheets/', include('spreadsheets.urls')),
     path('api/', include(api_patterns)),
 ]

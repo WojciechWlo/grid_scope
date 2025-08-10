@@ -39,12 +39,12 @@ def validate_excel_range(value):
 
 
 class Key(models.Model):
-    key = models.CharField(max_length=100, null=False, blank=False)
-
+    key = models.CharField(unique=False,max_length=100, null=False, blank=False)
+    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
 
 class Spreadsheet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
-    key = models.ForeignKey(Key, on_delete=models.CASCADE, null=False, blank=False)
+    key = models.ForeignKey(Key, on_delete=models.CASCADE, null=True, blank=True)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     url = models.URLField(max_length=100,null=False, blank=False)
 
