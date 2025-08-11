@@ -24,6 +24,15 @@ const keyListSlice = createSlice({
 		keyListFail(state, action: PayloadAction<string>) {
 			state.loading = false;
 			state.error = action.payload;
+		},
+		keyListClear(state)
+		{
+			state.loading = false
+			state.error = undefined;
+			state.keys = undefined;
+			state.page = undefined;
+			state.pages = undefined;
+
 		}
 	},
 });
@@ -31,7 +40,8 @@ const keyListSlice = createSlice({
 export const {
 	keyListRequest,
 	keyListSuccess,
-	keyListFail
+	keyListFail,
+	keyListClear
 } = keyListSlice.actions;
 
 export const keyListReducer = keyListSlice.reducer;

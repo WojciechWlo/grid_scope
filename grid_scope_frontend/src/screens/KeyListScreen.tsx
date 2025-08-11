@@ -16,6 +16,7 @@ type Key={
 }
 
 function KeyListScreen() {
+
     const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>()
     const location = useLocation()
@@ -68,7 +69,6 @@ function KeyListScreen() {
                                 <tr>
                                     <th>ID</th>
                                     <th>LABEL</th>
-                                    <th>Key</th>
                                     <th></th>
                                 </tr>
 
@@ -78,7 +78,6 @@ function KeyListScreen() {
                                     <tr key={key.id}>
                                         <td>{key.id}</td>
                                         <td>{key.label}</td>
-                                        <td>{key.key}</td>
                                         <td>
                                             <Button variant='light' className='btn-sm' onClick={()=>editKeyHandler(key.id)}>
                                                 <i className='fas fa-edit'></i>

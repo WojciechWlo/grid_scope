@@ -21,4 +21,4 @@ class SpreadsheetSerializer(serializers.ModelSerializer):
 class KeySerializer(serializers.ModelSerializer):
     class Meta:
         model = Key
-        fields = '__all__'
+        exclude = ['key']

@@ -14,15 +14,14 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
     try {
         dispatch(spreadsheetListRequest());
 
-        console.log(keyword)
         const {
-            userLogin:{userInfo},
+            authTokens,
         } = getState()
         
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.tokens.access}`
+                Authorization: `Bearer ${authTokens.tokens.access}`
             },
         };
 
@@ -54,13 +53,13 @@ export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => a
         dispatch(spreadsheetCreateRequest());
 
         const {
-            userLogin:{userInfo},
+            authTokens,
         } = getState()
-        
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.tokens.access}`
+                Authorization: `Bearer ${authTokens.tokens.access}`
             },
         };
 

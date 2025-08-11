@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import LoginView
+import users.views as views
 
 urlpatterns = [
-    path('/login', LoginView.as_view(), name='login'),
+    path('login', views.LoginView.as_view(), name='login'),
+    path('tokens/refresh', views.TokensRefresh.as_view(), name='tokens-refresh')
 ]

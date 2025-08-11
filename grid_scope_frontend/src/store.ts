@@ -1,6 +1,9 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import userLoginSlice from './reducers/userSlices' ;
-import { UserLoginState } from './interfaces/userInterfaces';
+import {
+	userLoginReducer,
+	authTokensUpdateReducer,
+} from './reducers/userSlices' ;
+import { AuthTokensState } from './interfaces/userInterfaces';
 import { 
 	keyListReducer,
 	keyCreateReducer,
@@ -11,8 +14,8 @@ import {
 	spreadsheetCreateReducer
 }  from './reducers/spreadsheetSlices';
 
-function loadUserInfo(): any | null {
-	const item = localStorage.getItem('userInfo');
+function loadAuthTokens(): any | null {
+	const item = localStorage.getItem('authTokens');
 	if (!item) return null;
 	try {
 		return JSON.parse(item) as any;
@@ -21,10 +24,11 @@ function loadUserInfo(): any | null {
 	}
 	}
 
-const userInfoFromStorage = loadUserInfo();
+const authTokensFromStorage = loadAuthTokens();
 
 const rootReducer = combineReducers({
-	userLogin: userLoginSlice,
+	userLogin: userLoginReducer,
+	authTokens:authTokensUpdateReducer,
 	spreadsheetList : spreadsheetListReducer,
 	spreadsheetCreate : spreadsheetCreateReducer,
 	keyList : keyListReducer,
@@ -34,9 +38,9 @@ const rootReducer = combineReducers({
 export type RootState = ReturnType<typeof rootReducer>;
 
 const preloadedState: Partial<RootState> = {
-	userLogin: {
-		userInfo: userInfoFromStorage,
-	} as UserLoginState,
+	authTokens: {
+		tokens: authTokensFromStorage,
+	} as AuthTokensState,
 };
 
 const store = configureStore({

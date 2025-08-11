@@ -14,28 +14,31 @@ import PrivateRoute from './components/PrivateRoute';
 import AddSpreadsheetScreen from './screens/AddSpreadsheetScreen';
 import KeyListScreen from './screens/KeyListScreen';
 import AddKeyScreen from './screens/AddKeyScreen';
+import { TokenRefreshProvider } from './components/TokenRefreshProvider';
 
 function App() {
 	return (
 		<div className="App">
-			<Router>
-				<Header />
-					<main>
-						<Container className="py-5">
-							<Routes>
-								<Route path='/' element={<HomeScreen/>} />
-								<Route path='/spreadsheetlist' element={<PrivateRoute><SpreadsheetListScreen/></PrivateRoute>} />
-								<Route path='/spreadsheetinlist' element={<PrivateRoute><SpreadsheetInListScreen/></PrivateRoute>} />
-								<Route path='/spreadsheetoutlist' element={<PrivateRoute><SpreadsheetOutListScreen/></PrivateRoute>} />
-								<Route path='/login' element={<LoginScreen/>} />
-								<Route path='/addspreadsheet' element={<PrivateRoute><AddSpreadsheetScreen/></PrivateRoute>} />
-								<Route path='/keylist' element={<PrivateRoute><KeyListScreen/></PrivateRoute>} />
-								<Route path='/addkey' element={<PrivateRoute><AddKeyScreen/></PrivateRoute>} />
-							</Routes>
-						</Container>
-					</main>
-				<Footer />
-			</Router>
+			<TokenRefreshProvider>
+				<Router>
+					<Header />
+						<main>
+							<Container className="py-5">
+								<Routes>
+									<Route path='/' element={<HomeScreen/>} />
+									<Route path='/spreadsheetlist' element={<PrivateRoute><SpreadsheetListScreen/></PrivateRoute>} />
+									<Route path='/spreadsheetinlist' element={<PrivateRoute><SpreadsheetInListScreen/></PrivateRoute>} />
+									<Route path='/spreadsheetoutlist' element={<PrivateRoute><SpreadsheetOutListScreen/></PrivateRoute>} />
+									<Route path='/login' element={<LoginScreen/>} />
+									<Route path='/addspreadsheet' element={<PrivateRoute><AddSpreadsheetScreen/></PrivateRoute>} />
+									<Route path='/keylist' element={<PrivateRoute><KeyListScreen/></PrivateRoute>} />
+									<Route path='/addkey' element={<PrivateRoute><AddKeyScreen/></PrivateRoute>} />
+								</Routes>
+							</Container>
+						</main>
+					<Footer />
+				</Router>
+			</TokenRefreshProvider>
 		</div>
 	);
 }

@@ -14,15 +14,14 @@ export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: 
     try {
         dispatch(keyListRequest());
 
-        console.log(keyword)
         const {
-            userLogin:{userInfo},
+            authTokens,
         } = getState()
-        
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.tokens.access}`
+                Authorization: `Bearer ${authTokens.tokens.access}`
             },
         };
 
@@ -30,8 +29,6 @@ export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: 
             `http://127.0.0.1:8000/api/spreadsheets/keys${keyword}`,
             config
         );
-
-        console.log(data)
 
         dispatch(keyListSuccess(data));
 
@@ -55,13 +52,13 @@ export const createKey = (keyCreate: KeyCreateType) => async (dispatch: AppDispa
         dispatch(keyCreateRequest());
 
         const {
-            userLogin:{userInfo},
+            authTokens,
         } = getState()
-        
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.tokens.access}`
+                Authorization: `Bearer ${authTokens.tokens.access}`
             },
         };
 

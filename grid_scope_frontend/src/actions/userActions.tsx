@@ -1,11 +1,16 @@
 import axios, { AxiosError } from 'axios';
-import { AppDispatch } from '../store'; // importujemy typ dispatch z store
+import { RootState,AppDispatch } from '../store';
 import {
     userLoginRequest,
     userLoginSuccess,
     userLoginFail,
     userLogout,
+    authTokensUpdateRequest,
+    authTokensUpdateSuccess,
+    authTokensUpdateFail,
+    authTokensClear,
 } from '../reducers/userSlices'; 
+import { keyListClear } from '../reducers/keySlices';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -24,8 +29,9 @@ export const login = (username: string, password: string) => async (dispatch: Ap
         config
         );
 
-        dispatch(userLoginSuccess(data));
-        localStorage.setItem('userInfo', JSON.stringify(data));
+        dispatch(userLoginSuccess(data.user));
+        dispatch(authTokensUpdateSuccess(data.tokens))
+        localStorage.setItem('authTokens', JSON.stringify(data.tokens));
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
@@ -37,7 +43,44 @@ export const login = (username: string, password: string) => async (dispatch: Ap
 };
 
 export const logout = () => (dispatch: AppDispatch) => {
-    localStorage.removeItem('userInfo');
     dispatch(userLogout());
+    localStorage.removeItem('authTokens');    
+    dispatch(authTokensClear());
+    dispatch(keyListClear())
+};
 
+export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(authTokensUpdateRequest());
+
+        const {
+            authTokens,
+        } = getState()
+        
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+            },
+        };
+        const { data } = await axios.post(
+            `http://127.0.0.1:8000/api/users/tokens/refresh`,
+            {
+                refresh:authTokens.tokens.refresh,
+            },
+            config
+        );
+
+        dispatch(authTokensUpdateSuccess(data.tokens))
+        localStorage.setItem('authTokens', JSON.stringify(data.tokens));
+        dispatch(userLoginSuccess(data.user));
+
+    } catch (err) {
+        dispatch(logout())
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+        authTokensUpdateFail(
+            error.response && error.response.data.detail ? error.response.data.detail : error.message
+        )
+        );
+    }
 };
