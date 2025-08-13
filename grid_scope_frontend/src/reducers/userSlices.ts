@@ -64,7 +64,7 @@ const authTokensUpdateSlice = createSlice({
 			state.loading = false;
 			state.error = action.payload;
 		},
-		authTokensClear(state) {
+		authTokensReset(state) {
 			state.loading = false;			
 			state.tokens = undefined;
 			state.error = undefined;
@@ -76,7 +76,7 @@ export const {
 	authTokensUpdateRequest,
 	authTokensUpdateSuccess,
 	authTokensUpdateFail,
-	authTokensClear,
+	authTokensReset,
 } = authTokensUpdateSlice.actions;
 
 export const authTokensUpdateReducer = authTokensUpdateSlice.reducer;

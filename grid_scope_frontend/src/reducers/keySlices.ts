@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { 
 	KeyListState,
 	KeyCreateState,
+	KeyDeleteState,
 } from '../interfaces/keyInterfaces';
 
 const initialListState: KeyListState = {};
@@ -25,7 +26,7 @@ const keyListSlice = createSlice({
 			state.loading = false;
 			state.error = action.payload;
 		},
-		keyListClear(state)
+		keyListReset(state)
 		{
 			state.loading = false
 			state.error = undefined;
@@ -41,7 +42,7 @@ export const {
 	keyListRequest,
 	keyListSuccess,
 	keyListFail,
-	keyListClear
+	keyListReset
 } = keyListSlice.actions;
 
 export const keyListReducer = keyListSlice.reducer;
@@ -55,7 +56,7 @@ const keyCreateSlice = createSlice({
 		keyCreateRequest(state) {
 			state.loading = true;
 			state.error = undefined;
-			state.error = undefined;
+			state.response = undefined;
 		},
 		keyCreateSuccess(state, action: PayloadAction<KeyCreateState>) {
 			state.loading = false;
@@ -66,6 +67,11 @@ const keyCreateSlice = createSlice({
 			state.loading = false;
 			state.error = action.payload;
 			state.response = undefined;
+		},
+		keyCreateReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.response = undefined;
 		}
 	},
 });
@@ -73,7 +79,46 @@ const keyCreateSlice = createSlice({
 export const {
 	keyCreateRequest,
 	keyCreateSuccess,
-	keyCreateFail
+	keyCreateFail,
+	keyCreateReset,
 } = keyCreateSlice.actions;
 
 export const keyCreateReducer = keyCreateSlice.reducer;
+
+const initialDeleteState: KeyDeleteState = {};
+
+export const keyDeleteSlice =createSlice({
+	name: 'keyDelete',
+	initialState:initialDeleteState,
+	reducers: {
+		keyDeleteRequest(state) {
+			state.loading = true;
+			state.error = undefined;
+			state.response = undefined;
+		},
+		keyDeleteSuccess(state, action: PayloadAction<KeyDeleteState>) {
+			state.loading = false;
+			state.response = action.payload;
+			state.error = undefined;
+		},
+		keyDeleteFail(state, action: PayloadAction<string>) {
+			state.loading = false;
+			state.error = action.payload;
+			state.response = undefined;
+		},
+		keyDeleteReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.response = undefined;
+		}
+	},
+})
+
+export const {
+	keyDeleteRequest,
+	keyDeleteSuccess,
+	keyDeleteFail,
+	keyDeleteReset,
+} = keyDeleteSlice.actions;
+
+export const keyDeleteReducer = keyDeleteSlice.reducer;

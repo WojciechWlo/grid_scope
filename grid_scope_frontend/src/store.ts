@@ -7,6 +7,7 @@ import { AuthTokensState } from './interfaces/userInterfaces';
 import { 
 	keyListReducer,
 	keyCreateReducer,
+	keyDeleteReducer
 
 } from './reducers/keySlices';
 import {
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
 	spreadsheetCreate : spreadsheetCreateReducer,
 	keyList : keyListReducer,
 	keyCreate : keyCreateReducer,
+	keyDelete : keyDeleteReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

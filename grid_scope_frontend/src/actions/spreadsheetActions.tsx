@@ -45,7 +45,7 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
 type SpreadsheetCreateType={
     label:string, 
     url:string, 
-    key:string
+    key_label:string
 }
 
 export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {

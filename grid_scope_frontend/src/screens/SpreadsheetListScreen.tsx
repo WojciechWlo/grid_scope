@@ -12,7 +12,8 @@ import Paginate from '../components/Paginate'
 type Spreadsheet={
     id: number,
     label: string,
-    url: string
+    url: string,
+    key: string
 }
 
 function SpreadsheetListScreen() {
@@ -71,6 +72,7 @@ function SpreadsheetListScreen() {
                                     <th>ID</th>
                                     <th>LABEL</th>
                                     <th>URL</th>
+                                    <th>KEY</th>
                                     <th></th>
                                 </tr>
 
@@ -81,6 +83,7 @@ function SpreadsheetListScreen() {
                                         <td>{spreadsheet.id}</td>
                                         <td>{spreadsheet.label}</td>
                                         <td>{spreadsheet.url}</td>
+                                        <td>{spreadsheet.key}</td>
                                         <td>
                                             <Button variant='light' className='btn-sm' onClick={()=>editSpreadsheetHandler(spreadsheet.id)}>
                                                 <i className='fas fa-edit'></i>

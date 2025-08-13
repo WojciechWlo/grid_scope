@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Form, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import {useDispatch, useSelector} from 'react-redux'
@@ -6,10 +6,12 @@ import { createKey } from '../actions/keyActions'
 import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import {useNavigate } from 'react-router-dom'
+import { keyCreateReset } from '../reducers/keySlices'
 
 function AddKeyScreen() {
 
-
+	const navigate = useNavigate()
 	const [label, setLabel] = useState('')
 	const [url, setUrl] = useState('')
 	const [key, setKey] = useState('')
@@ -19,6 +21,14 @@ function AddKeyScreen() {
     const keyCreate = useSelector((state: RootState)=>state.keyCreate)
     const {error, loading, response} = keyCreate
 
+	useEffect(()=>{
+		dispatch(keyCreateReset())
+		if(response)
+		{
+			navigate(`/keylist`)
+		}
+
+	},[response, navigate])
 
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()

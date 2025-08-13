@@ -44,7 +44,7 @@ class Key(models.Model):
 
 class Spreadsheet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
-    key = models.ForeignKey(Key, on_delete=models.CASCADE, null=True, blank=True)
+    key = models.ForeignKey(Key, on_delete=models.CASCADE, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     url = models.URLField(max_length=100,null=False, blank=False)
 

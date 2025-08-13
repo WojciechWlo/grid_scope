@@ -7,6 +7,9 @@ import {
     keyCreateRequest,
     keyCreateSuccess,
     keyCreateFail,
+    keyDeleteRequest,
+    keyDeleteSuccess,
+    keyDeleteFail,
 } from '../reducers/keySlices'; 
 
 
@@ -35,9 +38,9 @@ export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        keyListFail(
-            error.response && error.response.data.detail ? error.response.data.detail : error.message
-        )
+            keyListFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
         );
     }
 };
@@ -73,9 +76,42 @@ export const createKey = (keyCreate: KeyCreateType) => async (dispatch: AppDispa
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        keyCreateFail(
-            error.response && error.response.data.detail ? error.response.data.detail : error.message
-        )
+            keyCreateFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
         );
     }
 };
+
+export const deleteKey = (id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try{
+        dispatch(keyDeleteRequest())
+
+        const {
+            authTokens,
+        } = getState()
+
+        const config ={
+            headers: {
+                'Content-type':'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            }
+        }
+
+        const{data} = await axios.delete(
+            `http://127.0.0.1:8000/api/spreadsheets/keys/delete/${id}`,
+            config
+        )
+
+        dispatch(keyDeleteSuccess(data))
+
+
+    } catch (err) {
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+            keyDeleteFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
+        );
+    }
+}

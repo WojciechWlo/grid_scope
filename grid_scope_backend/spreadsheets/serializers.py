@@ -14,6 +14,7 @@ class SpreadsheetOutSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SpreadsheetSerializer(serializers.ModelSerializer):
+    key = serializers.CharField(source='key.label')
     class Meta:
         model = Spreadsheet
         fields = '__all__'

@@ -42,37 +42,42 @@ def createSpreadsheet(request):
     user = request.user
     data = request.data
 
-    label = data['label']
-    url = data['url']
-    key_label = data['key_label']
+    label = data.get('label')
+    url = data.get('url')
+    key_label = data.get('key_label')
 
-    if label and url:
-
-        spreadsheet = Spreadsheet.objects.filter(label = label)
-        if spreadsheet:
-            content = {"detail":"Spreadsheet could not be created"}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)           
-        
-        key_instance = None
-        if key_label :
-            key_instance = Key.objects.filter(label = key_label)
-    
-        if key_instance==None:
-            content = {"detail":"Spreadsheet could not be created"}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)                
-
-        Spreadsheet.objects.create(
-            user = user,
-            label = label,
-            url = url,
-            key=key_instance
+    if not label or not url:
+        return Response(
+            {"detail": "Spreadsheet could not be created. Missing label or url."},
+            status=status.HTTP_400_BAD_REQUEST
         )
-        content = {"detail":"Spreadsheet has been created"}
-        return Response(content)
 
-    
-    content = {"detail":"Spreadsheet could not be created"}
-    return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    if Spreadsheet.objects.filter(label=label).exists():
+        return Response(
+            {"detail": "Spreadsheet could not be created. Label already exists."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    key_instance = None
+    if key_label:
+        try:
+            print(key_label)
+            key_instance = Key.objects.get(label=key_label)
+
+        except Key.DoesNotExist:
+            return Response(
+                {"detail": "Spreadsheet could not be created. Key not found."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    Spreadsheet.objects.create(
+        user=user,
+        label=label,
+        url=url,
+        key=key_instance
+    )
+
+    return Response({"detail": "Spreadsheet has been created"})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -81,22 +86,28 @@ def getKeys(request):
     keys = Key.objects.all()
 
     page = request.query_params.get('page')
-    paginator = Paginator(keys, 10)
-
-    try:
-        keys = paginator.page(page)
-    except PageNotAnInteger:
-        keys = paginator.page(1)
-    except EmptyPage:
-        keys = paginator.page(paginator.num_pages)
 
     if page == None:
         page = 1
 
     page = int(page)
+    pages = 1
+
+    if page > 0:
+        paginator = Paginator(keys, 10)
+
+        try:
+            keys = paginator.page(page)
+        except PageNotAnInteger:
+            keys = paginator.page(1)
+        except EmptyPage:
+            keys = paginator.page(paginator.num_pages)
+
+
+        pages = paginator.num_pages
 
     serializer = KeySerializer(keys, many=True)
-    return Response({'keys':serializer.data, 'page':page, 'pages':paginator.num_pages})
+    return Response({'keys':serializer.data, 'page':page, 'pages':pages})
 
 
 @api_view(['POST'])
@@ -117,3 +128,10 @@ def createKey(request):
     
     content = {"detail":"Spreadsheet could not be created"}
     return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteKey(request, pk):
+    key = Key.objects.get(id = pk)
+    key.delete()
+    return Response('Key deleted')

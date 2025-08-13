@@ -8,9 +8,9 @@ import {
     authTokensUpdateRequest,
     authTokensUpdateSuccess,
     authTokensUpdateFail,
-    authTokensClear,
+    authTokensReset,
 } from '../reducers/userSlices'; 
-import { keyListClear } from '../reducers/keySlices';
+import { keyListReset } from '../reducers/keySlices';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -45,8 +45,8 @@ export const login = (username: string, password: string) => async (dispatch: Ap
 export const logout = () => (dispatch: AppDispatch) => {
     dispatch(userLogout());
     localStorage.removeItem('authTokens');    
-    dispatch(authTokensClear());
-    dispatch(keyListClear())
+    dispatch(authTokensReset());
+    dispatch(keyListReset())
 };
 
 export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {

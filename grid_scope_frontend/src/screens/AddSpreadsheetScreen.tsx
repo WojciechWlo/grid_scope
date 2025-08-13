@@ -1,32 +1,58 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Form, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import {useDispatch, useSelector} from 'react-redux'
+import {useNavigate, useLocation } from 'react-router-dom'
 import { createSpreadsheet } from '../actions/spreadsheetActions'
 import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import { listKeys } from '../actions/keyActions'
+import Select from "react-select";
+
+type Key={
+    id: number,
+    label: string,
+    key: string,
+}
 
 function AddSpreadsheetScreen() {
 
-
+	const navigate = useNavigate()
 	const [label, setLabel] = useState('')
 	const [url, setUrl] = useState('')
-	const [key, setKey] = useState('')
+	const [keyLabel, setKeyLabel] = useState('')
 
     const dispatch = useDispatch<AppDispatch>()
+	type OptionType = { value: string; label: string };
 
     const spreadsheetCreate = useSelector((state: RootState)=>state.spreadsheetCreate)
     const {error, loading, response} = spreadsheetCreate
 
 
+	const keyList = useSelector((state: RootState)=>state.keyList)
+	const {loading:loadingKeyList, error:errorKeyList, keys=null} = keyList
+
+	const userLogin = useSelector((state: RootState)=>state.userLogin)
+	const {userInfo} = userLogin
+	
+	useEffect(()=>{
+		if(userInfo){
+			console.log("EEEEEE")
+			dispatch(listKeys("?page=0"))
+		}
+	},[dispatch, userInfo])
+
+
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()
+		console.log("EEEEEEEEEEEEE",keyLabel)
 		dispatch(createSpreadsheet({
 			label,
 			url,
-			key,
+			key_label:keyLabel,
 		}))
+
 	}
 
     return (
@@ -54,16 +80,35 @@ function AddSpreadsheetScreen() {
 					</Form.Control>
 				
 				</Form.Group>
+								
 
-				<Form.Group controlId='key'>
-					<Form.Label>
-						Key
-					</Form.Label>
-					<Form.Control type='key' placeholder='Enter Key' value={key} onChange={(e)=>setKey(e.target.value)}>
+				<Form.Group controlId="key">
+					<Form.Label>Key</Form.Label>
+					{loadingKeyList ? (
+						<Loader />
+					) : errorKeyList ? (
+						<Message variant="danger">{errorKeyList}</Message>
+					) : (
 
-					</Form.Control>
+						<Select<OptionType>
+							value={(keys || [])
+								.map((key: Key) => ({ value: key.id, label: key.label }))
+								.find((o: OptionType) => o.label === keyLabel) || null}
+
+							onChange={(selected) => setKeyLabel(selected ? selected.label : "")}
+
+							options={(keys || []).map((key: Key) => ({
+								value: key.id,
+								label: key.label,
+							}))}
+
+							isSearchable={true}
+							placeholder="Select Key"
+						/>
+					)}
 				</Form.Group>
 
+				<br/>
 				<Button type="submit" variant='primary'>Add</Button>
 			</Form>
 		</FormContainer>

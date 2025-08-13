@@ -4,7 +4,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Table, Button, Row, Col} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import type { RootState,AppDispatch } from '../store'
-import { listKeys } from '../actions/keyActions'
+import { deleteKey, listKeys } from '../actions/keyActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
@@ -27,15 +27,16 @@ function KeyListScreen() {
     const keyList = useSelector((state: RootState)=>state.keyList)
     const {loading, error, keys=null, pages, page} = keyList
 
+    const keyDelete = useSelector((state: RootState)=>state.keyDelete)
+    const {loading:loadingDelete, error:errorDelete, response:responseDelete} = keyDelete
+
     let keyword = location.search
 
     useEffect(()=>{
         if(userInfo){
             dispatch(listKeys(keyword))
         }
-       
-
-    },[dispatch, userInfo, keyword])
+    },[dispatch, userInfo, keyword,responseDelete])
 
 
 	const addKeyHandler = ()=>{
@@ -44,8 +45,10 @@ function KeyListScreen() {
 	const editKeyHandler = (id:number)=>{
 
 	}
-	const deleteKeyHandler = (id:number)=>{
-
+	const deleteKeyHandler = (id:string)=>{
+        if(window.confirm('Are you sure you want to delete this key?')){
+            dispatch(deleteKey(id))
+        }
 	}
     return (
 
@@ -83,7 +86,7 @@ function KeyListScreen() {
                                                 <i className='fas fa-edit'></i>
                                             </Button>
 
-                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteKeyHandler (key.id)}>
+                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteKeyHandler (""+key.id)}>
                                                 <i className='fas fa-trash'></i>
                                             </Button>
                                         </td>                                        
