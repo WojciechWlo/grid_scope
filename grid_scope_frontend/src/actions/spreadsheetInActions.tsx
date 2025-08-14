@@ -1,21 +1,21 @@
 import axios, { AxiosError } from 'axios';
 import { RootState,AppDispatch } from '../store';
 import {
-    spreadsheetListRequest,
-    spreadsheetListSuccess,
-    spreadsheetListFail,
-    spreadsheetCreateRequest,
-    spreadsheetCreateSuccess,
-    spreadsheetCreateFail,
-    spreadsheetDeleteRequest,
-    spreadsheetDeleteSuccess,
-    spreadsheetDeleteFail,
-} from '../reducers/spreadsheetSlices'; 
+    spreadsheetInListRequest,
+    spreadsheetInListSuccess,
+    spreadsheetInListFail,
+    spreadsheetInCreateRequest,
+    spreadsheetInCreateSuccess,
+    spreadsheetInCreateFail,
+    spreadsheetInDeleteRequest,
+    spreadsheetInDeleteSuccess,
+    spreadsheetInDeleteFail,
+} from '../reducers/spreadsheetInSlices';
 
 
-export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const listSpreadsheetsIn = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
-        dispatch(spreadsheetListRequest());
+        dispatch(spreadsheetInListRequest());
 
         const {
             authTokens,
@@ -29,32 +29,30 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets${keyword}`,
+            `http://127.0.0.1:8000/api/spreadsheets/in${keyword}`,
             config
         );
-
-        dispatch(spreadsheetListSuccess(data));
+        dispatch(spreadsheetInListSuccess(data));
 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        spreadsheetListFail(
+        spreadsheetInListFail(
             error.response && error.response.data.detail ? error.response.data.detail : error.message
         )
         );
     }
 };
 
-type SpreadsheetCreateType={
+type SpreadsheetInCreateType={
     label:string, 
-    url:string, 
-    key_label:string,
-    is_public: boolean
+    spreadsheet_label:string,
+    data_cell_range: string,
 }
 
-export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const createSpreadsheetIn = (spreadsheetInCreate: SpreadsheetInCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
-        dispatch(spreadsheetCreateRequest());
+        dispatch(spreadsheetInCreateRequest());
 
         const {
             authTokens,
@@ -68,26 +66,26 @@ export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => a
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/spreadsheets/create`,
-            spreadsheetCreate,
+            `http://127.0.0.1:8000/api/spreadsheets/in/create`,
+            spreadsheetInCreate,
             config
         );
 
-        dispatch(spreadsheetCreateSuccess(data));
+        dispatch(spreadsheetInCreateSuccess(data));
 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-        spreadsheetCreateFail(
+        spreadsheetInCreateFail(
             error.response && error.response.data.detail ? error.response.data.detail : error.message
         )
         );
     }
 };
 
-export const deleteSpreadsheet = (id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const deleteSpreadsheetIn = (id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try{
-        dispatch(spreadsheetDeleteRequest())
+        dispatch(spreadsheetInDeleteRequest())
 
         const {
             authTokens,
@@ -101,17 +99,17 @@ export const deleteSpreadsheet = (id: string) => async (dispatch: AppDispatch, g
         }
 
         const{data} = await axios.delete(
-            `http://127.0.0.1:8000/api/spreadsheets/delete/${id}`,
+            `http://127.0.0.1:8000/api/spreadsheets/in/delete/${id}`,
             config
         )
 
-        dispatch(spreadsheetDeleteSuccess(data))
+        dispatch(spreadsheetInDeleteSuccess(data))
 
 
     } catch (err) {
         const error = err as AxiosError<{ detail: string }>;
         dispatch(
-            spreadsheetDeleteFail(
+            spreadsheetInDeleteFail(
                 error.response && error.response.data.detail ? error.response.data.detail : error.message
             )
         );

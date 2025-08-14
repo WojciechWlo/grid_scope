@@ -21,6 +21,7 @@ const keyListSlice = createSlice({
 			state.keys = action.payload.keys;
 			state.page = action.payload.page;
 			state.pages = action.payload.pages;
+
 		},
 		keyListFail(state, action: PayloadAction<string>) {
 			state.loading = false;
@@ -33,7 +34,6 @@ const keyListSlice = createSlice({
 			state.keys = undefined;
 			state.page = undefined;
 			state.pages = undefined;
-
 		}
 	},
 });

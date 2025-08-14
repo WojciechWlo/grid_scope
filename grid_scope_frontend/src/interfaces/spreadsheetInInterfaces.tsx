@@ -1,19 +1,19 @@
-export interface SpreadsheetListState {
+export interface SpreadsheetInListState {
     loading?: boolean;
-    spreadsheets?: any;
+    spreadsheetsIn?: any;
     error?: string;
     page?: number;
     pages?: number;
 }
 
-export interface SpreadsheetCreateState{
+export interface SpreadsheetInCreateState{
     loading?: boolean;
     response?: any;
     status?:any;
     error?: string;    
 }
 
-export interface SpreadsheetDeleteState{
+export interface SpreadsheetInDeleteState{
     loading?: boolean;
     response?: any;
     error?: string;    

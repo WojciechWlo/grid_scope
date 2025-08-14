@@ -4,7 +4,7 @@ import {LinkContainer} from 'react-router-bootstrap'
 import {Table, Button, Row, Col} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import type { RootState,AppDispatch } from '../store'
-import { listSpreadsheets } from '../actions/spreadsheetActions'
+import { deleteSpreadsheet, listSpreadsheets } from '../actions/spreadsheetActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
@@ -13,7 +13,8 @@ type Spreadsheet={
     id: number,
     label: string,
     url: string,
-    key: string
+    key: string,
+    is_public: boolean,
 }
 
 function SpreadsheetListScreen() {
@@ -27,18 +28,10 @@ function SpreadsheetListScreen() {
     const spreadsheetList = useSelector((state: RootState)=>state.spreadsheetList)
     const {loading, error, spreadsheets=null, pages, page} = spreadsheetList
 
+    const spreadsheetDelete = useSelector((state: RootState)=>state.spreadsheetDelete)
+    const {loading:loadingDelete, error:errorDelete, response:responseDelete} = spreadsheetDelete
+
     let keyword = location.search
-
-    useEffect(()=>{
-        if(userInfo){
-            dispatch(listSpreadsheets(keyword))
-        }
-       
-
-    },[dispatch, userInfo, keyword])
-
-
-
 
 	const addSpreadsheetHandler = ()=>{
         navigate("/addspreadsheet")
@@ -46,9 +39,20 @@ function SpreadsheetListScreen() {
 	const editSpreadsheetHandler = (id:number)=>{
 
 	}
-	const deleteSpreadsheetHandler = (id:number)=>{
-
+	const deleteSpreadsheetHandler = (id:string)=>{
+        if(window.confirm('Are you sure you want to delete this spreadsheet?')){
+            dispatch(deleteSpreadsheet(id))
+        }
 	}
+
+
+    useEffect(()=>{
+        if(userInfo){
+            dispatch(listSpreadsheets(keyword))
+        }
+    },[dispatch, userInfo, keyword,responseDelete])
+
+
     return (
 
         <div>
@@ -73,6 +77,7 @@ function SpreadsheetListScreen() {
                                     <th>LABEL</th>
                                     <th>URL</th>
                                     <th>KEY</th>
+                                    <th>IS PUBLIC?</th>
                                     <th></th>
                                 </tr>
 
@@ -84,12 +89,13 @@ function SpreadsheetListScreen() {
                                         <td>{spreadsheet.label}</td>
                                         <td>{spreadsheet.url}</td>
                                         <td>{spreadsheet.key}</td>
+                                        <td>{spreadsheet.is_public? "True" : "False"}</td>
                                         <td>
                                             <Button variant='light' className='btn-sm' onClick={()=>editSpreadsheetHandler(spreadsheet.id)}>
                                                 <i className='fas fa-edit'></i>
                                             </Button>
 
-                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteSpreadsheetHandler (spreadsheet.id)}>
+                                            <Button variant='danger' className='btn-sm' onClick={()=> deleteSpreadsheetHandler (""+spreadsheet.id)}>
                                                 <i className='fas fa-trash'></i>
                                             </Button>
                                         </td>                                        

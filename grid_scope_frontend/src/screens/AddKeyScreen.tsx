@@ -58,7 +58,7 @@ function AddKeyScreen() {
 					<Form.Label>
 						Key
 					</Form.Label>
-					<Form.Control type='key' placeholder='Enter Key' value={key} onChange={(e)=>setKey(e.target.value)}>
+					<Form.Control type='text' placeholder='Enter Key' value={key} onChange={(e)=>setKey(e.target.value)}>
 
 					</Form.Control>
 				</Form.Group>

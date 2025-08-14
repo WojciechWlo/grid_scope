@@ -14,6 +14,7 @@ const userLoginSlice = createSlice({
 		userLoginRequest(state) {
 			state.loading = true;
 			state.error = undefined;
+			state.status = undefined;
 		},
 		userLoginSuccess(state, action: PayloadAction) {
 			if (JSON.stringify(state.userInfo) === JSON.stringify(action.payload)) {

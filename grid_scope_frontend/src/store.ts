@@ -12,8 +12,19 @@ import {
 } from './reducers/keySlices';
 import {
     spreadsheetListReducer,
-	spreadsheetCreateReducer
+	spreadsheetCreateReducer,
+	spreadsheetDeleteReducer,
 }  from './reducers/spreadsheetSlices';
+import {
+    spreadsheetInListReducer,
+	spreadsheetInCreateReducer,
+	spreadsheetInDeleteReducer,
+}  from './reducers/spreadsheetInSlices';
+import {
+    spreadsheetOutListReducer,
+    spreadsheetOutCreateReducer,
+    spreadsheetOutDeleteReducer,
+} from './reducers/spreadsheetOutSlices';
 
 function loadAuthTokens(): any | null {
 	const item = localStorage.getItem('authTokens');
@@ -32,6 +43,13 @@ const rootReducer = combineReducers({
 	authTokens:authTokensUpdateReducer,
 	spreadsheetList : spreadsheetListReducer,
 	spreadsheetCreate : spreadsheetCreateReducer,
+	spreadsheetDelete : spreadsheetDeleteReducer,
+	spreadsheetInList : spreadsheetInListReducer,
+	spreadsheetInCreate : spreadsheetInCreateReducer,
+	spreadsheetInDelete : spreadsheetInDeleteReducer,
+    spreadsheetOutList: spreadsheetOutListReducer,
+    spreadsheetOutCreate: spreadsheetOutCreateReducer,
+    spreadsheetOutDelete: spreadsheetOutDeleteReducer,	
 	keyList : keyListReducer,
 	keyCreate : keyCreateReducer,
 	keyDelete : keyDeleteReducer,

@@ -9,6 +9,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listKeys } from '../actions/keyActions'
 import Select from "react-select";
+import { spreadsheetCreateReset } from '../reducers/spreadsheetSlices'
 
 type Key={
     id: number,
@@ -22,6 +23,7 @@ function AddSpreadsheetScreen() {
 	const [label, setLabel] = useState('')
 	const [url, setUrl] = useState('')
 	const [keyLabel, setKeyLabel] = useState('')
+	const [isPublic, setIsPublic] = useState(true)
 
     const dispatch = useDispatch<AppDispatch>()
 	type OptionType = { value: string; label: string };
@@ -38,19 +40,28 @@ function AddSpreadsheetScreen() {
 	
 	useEffect(()=>{
 		if(userInfo){
-			console.log("EEEEEE")
 			dispatch(listKeys("?page=0"))
 		}
 	},[dispatch, userInfo])
 
 
+	useEffect(()=>{
+		dispatch(spreadsheetCreateReset())
+		if(response)
+		{
+			navigate(`/spreadsheetlist`)
+		}
+
+	},[response, navigate])
+
+
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()
-		console.log("EEEEEEEEEEEEE",keyLabel)
 		dispatch(createSpreadsheet({
 			label,
 			url,
 			key_label:keyLabel,
+			is_public:isPublic,
 		}))
 
 	}
@@ -75,12 +86,23 @@ function AddSpreadsheetScreen() {
 					<Form.Label>
 						URL
 					</Form.Label>
-					<Form.Control type='url' placeholder='Enter URL' value={url} onChange={(e)=>setUrl(e.target.value)}>
+					<Form.Control type='text' placeholder='Enter URL' value={url} onChange={(e)=>setUrl(e.target.value)}>
 
 					</Form.Control>
 				
 				</Form.Group>
-								
+
+				<Form.Group controlId="isPublic">
+					<Form.Label>Is Public</Form.Label>
+					<Form.Check
+						type="checkbox"
+						checked={isPublic}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+						setIsPublic(e.target.checked)
+						}
+					/>
+				</Form.Group>
+
 
 				<Form.Group controlId="key">
 					<Form.Label>Key</Form.Label>

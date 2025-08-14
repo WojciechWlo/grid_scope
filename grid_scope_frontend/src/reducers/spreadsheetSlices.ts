@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { 
 	SpreadsheetListState,
 	SpreadsheetCreateState,
+	SpreadsheetDeleteState,
 } from '../interfaces/spreadsheetInterfaces';
 
 const initialListState: SpreadsheetListState = {};
@@ -24,6 +25,12 @@ const spreadsheetListSlice = createSlice({
 		spreadsheetListFail(state, action: PayloadAction<string>) {
 			state.loading = false;
 			state.error = action.payload;
+		},
+		spreadsheetListReset(state){
+			state.loading = false;
+			state.spreadsheets = undefined;
+			state.page = undefined;
+			state.pages = undefined;			
 		}
 	},
 });
@@ -31,7 +38,8 @@ const spreadsheetListSlice = createSlice({
 export const {
 	spreadsheetListRequest,
 	spreadsheetListSuccess,
-	spreadsheetListFail
+	spreadsheetListFail,
+	spreadsheetListReset,
 } = spreadsheetListSlice.actions;
 
 export const spreadsheetListReducer = spreadsheetListSlice.reducer;
@@ -56,6 +64,11 @@ const spreadsheetCreateSlice = createSlice({
 			state.loading = false;
 			state.error = action.payload;
 			state.response = undefined;
+		},
+		spreadsheetCreateReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.response = undefined;		
 		}
 	},
 });
@@ -63,7 +76,47 @@ const spreadsheetCreateSlice = createSlice({
 export const {
 	spreadsheetCreateRequest,
 	spreadsheetCreateSuccess,
-	spreadsheetCreateFail
+	spreadsheetCreateFail,
+	spreadsheetCreateReset,
 } = spreadsheetCreateSlice.actions;
 
 export const spreadsheetCreateReducer = spreadsheetCreateSlice.reducer;
+
+
+const initialDeleteState: SpreadsheetDeleteState = {};
+
+export const spreadsheetDeleteSlice =createSlice({
+	name: 'spreadsheetDelete',
+	initialState:initialDeleteState,
+	reducers: {
+		spreadsheetDeleteRequest(state) {
+			state.loading = true;
+			state.error = undefined;
+			state.response = undefined;
+		},
+		spreadsheetDeleteSuccess(state, action: PayloadAction<SpreadsheetDeleteState>) {
+			state.loading = false;
+			state.response = action.payload;
+			state.error = undefined;
+		},
+		spreadsheetDeleteFail(state, action: PayloadAction<string>) {
+			state.loading = false;
+			state.error = action.payload;
+			state.response = undefined;
+		},
+		spreadsheetDeleteReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.response = undefined;
+		}
+	},
+})
+
+export const {
+	spreadsheetDeleteRequest,
+	spreadsheetDeleteSuccess,
+	spreadsheetDeleteFail,
+	spreadsheetDeleteReset,
+} = spreadsheetDeleteSlice.actions;
+
+export const spreadsheetDeleteReducer = spreadsheetDeleteSlice.reducer;

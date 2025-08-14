@@ -11,6 +11,9 @@ import {
     authTokensReset,
 } from '../reducers/userSlices'; 
 import { keyListReset } from '../reducers/keySlices';
+import { spreadsheetListReset} from '../reducers/spreadsheetSlices';
+import { spreadsheetInListReset} from '../reducers/spreadsheetInSlices';
+import { spreadsheetOutListReset } from '../reducers/spreadsheetOutSlices';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -47,6 +50,9 @@ export const logout = () => (dispatch: AppDispatch) => {
     localStorage.removeItem('authTokens');    
     dispatch(authTokensReset());
     dispatch(keyListReset())
+    dispatch(spreadsheetListReset())    
+    dispatch(spreadsheetInListReset())
+    dispatch(spreadsheetOutListReset())    
 };
 
 export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {

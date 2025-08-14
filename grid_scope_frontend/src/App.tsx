@@ -15,6 +15,8 @@ import AddSpreadsheetScreen from './screens/AddSpreadsheetScreen';
 import KeyListScreen from './screens/KeyListScreen';
 import AddKeyScreen from './screens/AddKeyScreen';
 import { TokenRefreshProvider } from './components/TokenRefreshProvider';
+import AddSpreadsheetInScreen from './screens/AddSpreadsheetInScreen';
+import AddSpreadsheetOutScreen from './screens/AddSpreadsheetOutScreen';
 
 function App() {
 	return (
@@ -31,6 +33,8 @@ function App() {
 									<Route path='/spreadsheetoutlist' element={<PrivateRoute><SpreadsheetOutListScreen/></PrivateRoute>} />
 									<Route path='/login' element={<LoginScreen/>} />
 									<Route path='/addspreadsheet' element={<PrivateRoute><AddSpreadsheetScreen/></PrivateRoute>} />
+									<Route path='/addspreadsheetin' element={<PrivateRoute><AddSpreadsheetInScreen/></PrivateRoute>} />
+									<Route path='/addspreadsheetout' element={<PrivateRoute><AddSpreadsheetOutScreen/></PrivateRoute>} />									
 									<Route path='/keylist' element={<PrivateRoute><KeyListScreen/></PrivateRoute>} />
 									<Route path='/addkey' element={<PrivateRoute><AddKeyScreen/></PrivateRoute>} />
 								</Routes>
