@@ -3,19 +3,16 @@
 
 set -e
 
-host="$1"
-shift
-port="$1"
-shift
-
-# Poczekaj aż port będzie otwarty
-until nc -z "$host" "$port"; do
-  echo "Waiting for $host:$port..."
+# Wait for the MSSQL server to be ready
+until nc -z "$DB_HOST" "$DB_PORT"; do
+  echo "Waiting for $DB_HOST:$DB_PORT..."
   sleep 1
 done
 
-# Poczekaj aż baza danych grid_scope_db będzie utworzona
-until sqlcmd -S mssql -U sa -P YourStrong!Passw0rd -N -C -Q "SELECT name FROM sys.databases WHERE name = 'grid_scope_db'" | grep -q grid_scope_db; do
-  echo "Waiting for database 'grid_scope_db' to be created..."
+# Wait until the database is created
+until sqlcmd -S "$DB_HOST,$DB_PORT" -U "$DB_USER" -P "$DB_PASSWORD" -N -C -Q "SELECT name FROM sys.databases WHERE name = '$DB_NAME'" | grep -q "$DB_NAME"; do
+  echo "Waiting for database '$DB_NAME' to be created..."
   sleep 2
 done
+
+echo "Database '$DB_NAME' is ready!"

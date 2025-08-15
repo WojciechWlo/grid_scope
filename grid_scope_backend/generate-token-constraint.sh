@@ -3,8 +3,7 @@
 
 echo "Generate token..."
 
-sqlcmd -S mssql -U sa -P YourStrong!Passw0rd -d grid_scope_db -N -C <<EOF
-
+sqlcmd -S "$DB_HOST,$DB_PORT" -U "$DB_USER" -P "$DB_PASSWORD" -d "$DB_NAME" -N -C <<EOF
 ALTER TABLE [dbo].[token_blacklist_blacklistedtoken] ADD UNIQUE NONCLUSTERED
 (
     [token_id] ASC

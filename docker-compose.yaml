@@ -7,9 +7,15 @@ services:
     volumes:
       - ./grid_scope_backend:/app
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT}:8000"
     environment:
-      - PYTHONUNBUFFERED=1
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED}
+      - PYTHONDONTWRITEBYTECODE=${PYTHONDONTWRITEBYTECODE}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
       
   frontend:
     build:
@@ -18,25 +24,25 @@ services:
       - ./grid_scope_frontend:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT}:3000"
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
+      - WATCHPACK_POLLING=${WATCHPACK_POLLING}
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
-      - MSSQL_PID=Express
+      - ACCEPT_EULA=${ACCEPT_EULA}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=${MSSQL_PID}
     ports:
-      - "1433:1433"
+      - "${MSSQL_PORT}:1433"
     volumes:
       - mssql_data:/var/opt/mssql
       - ./initdb.sql:/initdb.sql
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong!Passw0rd", "-N","-C", "-Q", "SELECT 1"]
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${MSSQL_SA_PASSWORD}", "-N", "-C", "-Q", "SELECT 1"]
       interval: 10s
       retries: 10
 
@@ -49,7 +55,7 @@ services:
       - ./initdb.sql:/initdb.sql
     entrypoint: >
       /bin/bash -c "
-      /opt/mssql-tools18/bin/sqlcmd -S mssql -U sa -P YourStrong!Passw0rd -N -C -i /initdb.sql
+      /opt/mssql-tools18/bin/sqlcmd -S mssql -U sa -P ${MSSQL_SA_PASSWORD} -N -C -i /initdb.sql
       "
 
 volumes:

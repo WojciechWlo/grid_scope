@@ -8,8 +8,9 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
-"""
 
+"""
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-11k^fkdj6ow6qh-dbgao4i-n4g6irzx3!ybhxge*6@ime!a2aj'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -81,15 +82,15 @@ WSGI_APPLICATION = 'grid_scope_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'grid_scope_db',
-        'USER': 'sa',
-        'PASSWORD': 'YourStrong!Passw0rd',
-        'HOST': 'mssql',
-        'PORT': '1433',
+        'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
+        'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
+        'USER': os.environ.get("DB_USER", "sa"),
+        'PASSWORD': os.environ.get("DB_PASSWORD", "YourStrong!Passw0rd"),
+        'HOST': os.environ.get("DB_HOST", "mssql"),
+        'PORT': os.environ.get("DB_PORT", "1433"),
         'OPTIONS': {
-            'driver': 'ODBC Driver 18 for SQL Server',
-            'extra_params': 'TrustServerCertificate=yes',
+            'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+            'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
         },
     }
 }

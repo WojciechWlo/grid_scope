@@ -4,7 +4,7 @@
 echo "Drop token constraint..."
 
 # Execute the SQL code on the MSSQL server
-sqlcmd -S mssql -U sa -P YourStrong!Passw0rd -N -C <<EOF
+sqlcmd -S "$DB_HOST,$DB_PORT" -U "$DB_USER" -P "$DB_PASSWORD" -d "$DB_NAME" -N -C <<EOF
 USE grid_scope_db;
 
 DECLARE @ConstraintName NVARCHAR(255);

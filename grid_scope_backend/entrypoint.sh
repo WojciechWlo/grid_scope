@@ -1,10 +1,10 @@
 #!/bin/sh
 
-./wait-for-it.sh mssql 1433
-
+./wait-for-it.sh
 
 python manage.py makemigrations
 
+python manage.py makemigrations
 python manage.py migrate
 
 ./drop-token-constraint.sh
