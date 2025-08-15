@@ -34,15 +34,15 @@ services:
     container_name: mssql
     environment:
       - ACCEPT_EULA=${ACCEPT_EULA}
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - SA_PASSWORD=${DB_PASSWORD}
       - MSSQL_PID=${MSSQL_PID}
     ports:
-      - "${MSSQL_PORT}:1433"
+      - "${DB_PORT}:1433"
     volumes:
       - mssql_data:/var/opt/mssql
       - ./initdb.sql:/initdb.sql
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${MSSQL_SA_PASSWORD}", "-N", "-C", "-Q", "SELECT 1"]
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "${DB_USER}", "-P", "${DB_PASSWORD}", "-N", "-C", "-Q", "SELECT 1"]
       interval: 10s
       retries: 10
 
@@ -55,7 +55,7 @@ services:
       - ./initdb.sql:/initdb.sql
     entrypoint: >
       /bin/bash -c "
-      /opt/mssql-tools18/bin/sqlcmd -S mssql -U sa -P ${MSSQL_SA_PASSWORD} -N -C -i /initdb.sql
+      /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql
       "
 
 volumes:
