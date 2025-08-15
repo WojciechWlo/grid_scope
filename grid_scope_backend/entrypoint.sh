@@ -1,8 +1,7 @@
 #!/bin/sh
+# entrypoint.sh
 
 ./wait-for-it.sh
-
-python manage.py makemigrations
 
 python manage.py makemigrations
 python manage.py migrate
