@@ -16,7 +16,7 @@ import {
     spreadsheetInGetFail,
     spreadsheetInGetSuccess,
     spreadsheetInGetRequest,
-} from '../reducers/spreadsheetInSlices';
+} from '../reducers/spreadsheetInReducers';
 
 
 export const listSpreadsheetsIn = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {
@@ -35,7 +35,7 @@ export const listSpreadsheetsIn = (keyword='') => async (dispatch: AppDispatch, 
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheetsin${keyword}/`,
+            `http://127.0.0.1:8000/api/spreadsheetsin/${keyword}`,
             config
         );
         dispatch(spreadsheetInListSuccess(data));

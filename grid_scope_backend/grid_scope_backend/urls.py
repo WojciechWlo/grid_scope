@@ -25,6 +25,7 @@ api_patterns = [
     path('spreadsheetsin/', include('base.urls.spreadsheet_in_urls')),
     path('spreadsheetsout/', include('base.urls.spreadsheet_out_urls')),
     path('keys/', include('base.urls.key_urls')),
+    path('processes/', include('base.urls.process_urls')),
     path('users/', include('base.urls.user_urls')),
     path('token/',TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh'),

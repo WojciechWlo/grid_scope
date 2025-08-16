@@ -114,6 +114,7 @@ class Process(models.Model):
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="processes_created") 
     updated_at = models.DateTimeField(auto_now=True)
     updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="processes_updated") 
+    query = models.TextField(max_length=1000, null=False, blank=False,)
 
     def __str__(self):
         return self.label

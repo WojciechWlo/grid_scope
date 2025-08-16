@@ -2,7 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
 	userLoginReducer,
 	authTokensUpdateReducer,
-} from './reducers/userSlices' ;
+} from './reducers/userReducers' ;
 import { AuthTokensState } from './interfaces/userInterfaces';
 import { 
 	keyListReducer,
@@ -11,28 +11,35 @@ import {
 	keyEditReducer,
 	keyGetReducer,
 
-} from './reducers/keySlices';
+} from './reducers/keyReducers';
 import {
     spreadsheetListReducer,
 	spreadsheetCreateReducer,
 	spreadsheetDeleteReducer,
 	spreadsheetEditReducer,
 	spreadsheetGetReducer,
-}  from './reducers/spreadsheetSlices';
+}  from './reducers/spreadsheetReducers';
 import {
     spreadsheetInListReducer,
 	spreadsheetInCreateReducer,
 	spreadsheetInDeleteReducer,
 	spreadsheetInEditReducer,
 	spreadsheetInGetReducer,
-}  from './reducers/spreadsheetInSlices';
+}  from './reducers/spreadsheetInReducers';
 import {
     spreadsheetOutListReducer,
     spreadsheetOutCreateReducer,
     spreadsheetOutDeleteReducer,
 	spreadsheetOutEditReducer,
 	spreadsheetOutGetReducer,
-} from './reducers/spreadsheetOutSlices';
+} from './reducers/spreadsheetOutReducers';
+import{
+	processListReducer,
+	processDeleteReducer,
+    processCreateReducer,
+	processEditReducer,
+	processGetReducer,	
+}from './reducers/processReducers';
 
 function loadAuthTokens(): any | null {
 	const item = localStorage.getItem('authTokens');
@@ -69,6 +76,11 @@ const rootReducer = combineReducers({
 	keyDelete : keyDeleteReducer,
 	keyEdit : keyEditReducer,
 	keyGet : keyGetReducer,
+	processList : processListReducer,
+	processDelete : processDeleteReducer,
+	processCreate : processCreateReducer,
+	processEdit : processEditReducer,
+	processGet : processGetReducer,	
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

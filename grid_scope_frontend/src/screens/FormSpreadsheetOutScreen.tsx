@@ -8,7 +8,7 @@ import type { RootState, AppDispatch } from '../store';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Select from 'react-select';
-import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset } from '../reducers/spreadsheetOutSlices';
+import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset } from '../reducers/spreadsheetOutReducers';
 import { listSpreadsheets } from '../actions/spreadsheetActions';
 
 type Spreadsheet = {

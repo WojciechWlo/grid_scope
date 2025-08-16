@@ -16,7 +16,7 @@ import {
     spreadsheetOutEditRequest,
     spreadsheetOutEditSuccess,
     spreadsheetOutEditFail,
-} from '../reducers/spreadsheetOutSlices';
+} from '../reducers/spreadsheetOutReducers';
 
 
 export const listSpreadsheetsOut = (keyword = '') => async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -33,7 +33,7 @@ export const listSpreadsheetsOut = (keyword = '') => async (dispatch: AppDispatc
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheetsout${keyword}/`,
+            `http://127.0.0.1:8000/api/spreadsheetsout/${keyword}`,
             config
         );
         dispatch(spreadsheetOutListSuccess(data));

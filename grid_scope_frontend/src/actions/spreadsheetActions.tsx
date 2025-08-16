@@ -16,7 +16,7 @@ import {
     spreadsheetEditRequest,
     spreadsheetEditSuccess,
     spreadsheetEditFail,
-} from '../reducers/spreadsheetSlices'; 
+} from '../reducers/spreadsheetReducers'; 
 
 
 export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, getState: ()=>RootState) => {

@@ -17,6 +17,8 @@ import FormKeyScreen from './screens/FormKeyScreen';
 import { TokenRefreshProvider } from './components/TokenRefreshProvider';
 import FormSpreadsheetInScreen from './screens/FormSpreadsheetInScreen';
 import FormSpreadsheetOutScreen from './screens/FormSpreadsheetOutScreen';
+import ProcessListScreen from './screens/ProcessListScreen';
+import FormProcessScreen from './screens/FormProcessScreen';
 
 function App() {
 	return (
@@ -40,8 +42,11 @@ function App() {
 									<Route path='/editspreadsheetout/:id' element={<PrivateRoute><FormSpreadsheetOutScreen/></PrivateRoute>} />										
 									<Route path='/keylist' element={<PrivateRoute><KeyListScreen/></PrivateRoute>} />
 									<Route path='/addkey' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
+									<Route path='/addprocess' element={<PrivateRoute><FormProcessScreen/></PrivateRoute>} />									
 									<Route path='/editkey/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
 									<Route path='/editspreadsheet/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
+									<Route path='/editprocess/:id' element={<PrivateRoute><FormProcessScreen/></PrivateRoute>} />
+									<Route path='/processlist' element={<PrivateRoute><ProcessListScreen/></PrivateRoute>} />
 								</Routes>
 							</Container>
 						</main>

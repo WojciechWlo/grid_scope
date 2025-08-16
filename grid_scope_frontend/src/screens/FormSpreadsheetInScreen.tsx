@@ -9,7 +9,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listKeys } from '../actions/keyActions'
 import Select from "react-select";
-import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset } from '../reducers/spreadsheetInSlices'
+import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset } from '../reducers/spreadsheetInReducers'
 import { getSpreadsheet, listSpreadsheets } from '../actions/spreadsheetActions'
 
 type Spreadsheet={

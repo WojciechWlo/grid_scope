@@ -9,7 +9,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listKeys } from '../actions/keyActions'
 import Select from "react-select";
-import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset } from '../reducers/spreadsheetSlices'
+import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset } from '../reducers/spreadsheetReducers'
 
 type Key={
     id: number,

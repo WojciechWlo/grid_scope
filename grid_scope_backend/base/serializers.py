@@ -26,10 +26,24 @@ class KeySerializer(serializers.ModelSerializer):
         model = Key
         exclude = ['key']
 
-class ProcessSerializer(serializers.ModelSerializer):  
+class ProcessSerializer(serializers.ModelSerializer):
+    spreadsheet_in_labels = serializers.SerializerMethodField()
+    spreadsheet_out_labels = serializers.SerializerMethodField()
+    
     class Meta:
         model = Process
         fields = '__all__'
+
+    def get_spreadsheet_in_labels(self, obj):
+        return list(
+            obj.processspreadsheetin_set.values_list("spreadsheet_in__label", flat=True)
+        )
+
+    def get_spreadsheet_out_labels(self, obj):
+        return list(
+            obj.processspreadsheetout_set.values_list("spreadsheet_out__label", flat=True)
+        )
+
 
 class ProcessSpreadsheetInSerializer(serializers.ModelSerializer):
     process = serializers.CharField(source='process.label')

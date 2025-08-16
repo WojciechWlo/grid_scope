@@ -7,7 +7,7 @@ import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import {useNavigate, useParams } from 'react-router-dom'
-import { keyCreateReset, keyEditReset, keyGetReset } from '../reducers/keySlices'
+import { keyCreateReset, keyEditReset, keyGetReset } from '../reducers/keyReducers'
 
 
 function FormKeyScreen() {

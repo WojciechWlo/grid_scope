@@ -44,6 +44,10 @@ return (
 							<i className="fas fa-file-export"></i> Outputs
 						</Nav.Link>
 
+						<Nav.Link as={NavLink} to="/processlist" className="nav-link">
+							<i className="fas fa-cogs"></i> Processes
+						</Nav.Link>
+
 						{userInfo ? (
 							<Nav.Link onClick={logoutHandler} className="nav-link">
 							<i className="fas fa-user" /> Logout

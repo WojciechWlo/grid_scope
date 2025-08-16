@@ -9,11 +9,12 @@ import {
     authTokensUpdateSuccess,
     authTokensUpdateFail,
     authTokensReset,
-} from '../reducers/userSlices'; 
-import { keyCreateReset, keyEditReset, keyGetReset, keyListReset } from '../reducers/keySlices';
-import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset, spreadsheetListReset} from '../reducers/spreadsheetSlices';
-import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset, spreadsheetInListReset} from '../reducers/spreadsheetInSlices';
-import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset, spreadsheetOutListReset } from '../reducers/spreadsheetOutSlices';
+} from '../reducers/userReducers'; 
+import { keyCreateReset, keyEditReset, keyGetReset, keyListReset } from '../reducers/keyReducers';
+import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset, spreadsheetListReset} from '../reducers/spreadsheetReducers';
+import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset, spreadsheetInListReset} from '../reducers/spreadsheetInReducers';
+import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset, spreadsheetOutListReset } from '../reducers/spreadsheetOutReducers';
+import { processCreateReset, processEditReset, processGetReset, processListReset } from '../reducers/processReducers';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -64,7 +65,11 @@ export const logout = () => (dispatch: AppDispatch) => {
     dispatch(spreadsheetOutListReset())
     dispatch(spreadsheetOutCreateReset())
     dispatch(spreadsheetOutEditReset())
-    dispatch(spreadsheetOutGetReset())    
+    dispatch(spreadsheetOutGetReset())  
+    dispatch(processListReset())
+    dispatch(processCreateReset())
+    dispatch(processEditReset())
+    dispatch(processGetReset())      
 };
 
 export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {
