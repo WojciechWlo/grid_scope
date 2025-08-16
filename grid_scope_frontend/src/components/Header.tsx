@@ -33,7 +33,7 @@ return (
 						</Nav.Link>
 
 						<Nav.Link as={NavLink} to="/spreadsheetlist" className="nav-link">
-							<i className="fas fa-list"></i> Spreadsheets
+							<i className="fas fa-table"></i> Spreadsheets
 						</Nav.Link>
 
 						<Nav.Link as={NavLink} to="/spreadsheetinlist" className="nav-link">
