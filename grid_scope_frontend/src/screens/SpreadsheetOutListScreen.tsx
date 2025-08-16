@@ -35,7 +35,7 @@ function SpreadsheetOutListScreen() {
         navigate('/addspreadsheetout');
     };
     const editSpreadsheetOutHandler = (id: number) => {
-        // TODO: handle edit
+        navigate(`/editspreadsheetout/${id}`)
     };
     const deleteSpreadsheetOutHandler = (id: string) => {
         if (window.confirm('Are you sure you want to delete this spreadsheetOut?')) {

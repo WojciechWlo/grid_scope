@@ -43,7 +43,7 @@ function KeyListScreen() {
         navigate("/addkey")
 	}
 	const editKeyHandler = (id:number)=>{
-
+        navigate(`/editkey/${id}`)
 	}
 	const deleteKeyHandler = (id:string)=>{
         if(window.confirm('Are you sure you want to delete this key?')){

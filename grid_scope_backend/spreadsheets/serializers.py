@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from spreadsheets.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet, Key
+from spreadsheets.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet, Key, Process, ProcessSpreadsheetIn, ProcessSpreadsheetOut
 #from rest_framework_simplejwt.tokens import RefreshToken
 
 class SpreadsheetInSerializer(serializers.ModelSerializer):
@@ -25,3 +25,22 @@ class KeySerializer(serializers.ModelSerializer):
     class Meta:
         model = Key
         exclude = ['key']
+
+class ProcessSerializer(serializers.ModelSerializer):  
+    class Meta:
+        model = Process
+        fields = '__all__'
+
+class ProcessSpreadsheetInSerializer(serializers.ModelSerializer):
+    process = serializers.CharField(source='process.label')
+    spreadsheet_in = serializers.CharField(source='spreadsheet_in.label')
+    class Meta:
+        model = ProcessSpreadsheetIn
+        fields = '__all__'
+
+class ProcessSpreadsheetOutSerializer(serializers.ModelSerializer):
+    process = serializers.CharField(source='process.label')
+    spreadsheet_out = serializers.CharField(source='spreadsheet_out.label')    
+    class Meta:
+        model = ProcessSpreadsheetOut
+        fields = '__all__'

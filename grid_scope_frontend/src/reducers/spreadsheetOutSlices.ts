@@ -4,6 +4,8 @@ import {
     SpreadsheetOutListState,
     SpreadsheetOutCreateState,
     SpreadsheetOutDeleteState,
+    SpreadsheetOutState,
+    SpreadsheetOutEditState,
 } from '../interfaces/spreadsheetOutInterfaces';
 
 const initialListState: SpreadsheetOutListState = {};
@@ -118,3 +120,80 @@ export const {
 } = spreadsheetOutDeleteSlice.actions;
 
 export const spreadsheetOutDeleteReducer = spreadsheetOutDeleteSlice.reducer;
+
+
+const initialEditState: SpreadsheetOutEditState = {};
+
+const spreadsheetOutEditSlice = createSlice({
+    name: 'spreadsheetOutEdit',
+    initialState:initialEditState,
+    reducers: {
+        spreadsheetOutEditRequest(state) {
+            state.loading = true;
+            state.error = undefined;
+            state.response = undefined;
+        },
+        spreadsheetOutEditSuccess(state, action: PayloadAction<SpreadsheetOutEditState>) {
+            state.loading = false;
+            state.response = action.payload;
+            state.error = undefined;
+        },
+        spreadsheetOutEditFail(state, action: PayloadAction<string>) {
+            state.loading = false;
+            state.error = action.payload;
+            state.response = undefined;
+        },
+        spreadsheetOutEditReset(state){
+            state.loading =false;
+            state.error = undefined;
+            state.response = undefined;
+        }
+    },
+});
+
+export const {
+    spreadsheetOutEditRequest,
+    spreadsheetOutEditSuccess,
+    spreadsheetOutEditFail,
+    spreadsheetOutEditReset,
+} = spreadsheetOutEditSlice.actions;
+
+export const spreadsheetOutEditReducer = spreadsheetOutEditSlice.reducer;
+
+const initialGetState: SpreadsheetOutState = {};
+
+const spreadsheetOutGetSlice = createSlice({
+    name: 'spreadsheetOut',
+    initialState:initialGetState,
+    reducers: {
+        spreadsheetOutGetRequest(state) {
+            state.loading = true;
+            state.error = undefined;
+            state.spreadsheetOut = undefined;
+        },
+        spreadsheetOutGetSuccess(state, action: PayloadAction<SpreadsheetOutState>) {
+            state.loading = false;
+            state.spreadsheetOut = action.payload;
+            state.error = undefined;
+        },
+        spreadsheetOutGetFail(state, action: PayloadAction<string>) {
+            state.loading = false;
+            state.error = action.payload;
+            state.spreadsheetOut = undefined;
+        },
+        spreadsheetOutGetReset(state){
+            state.loading =false;
+            state.error = undefined;
+            state.spreadsheetOut = undefined;
+        }
+    },
+});
+
+export const {
+    spreadsheetOutGetRequest,
+    spreadsheetOutGetSuccess,
+    spreadsheetOutGetFail,
+    spreadsheetOutGetReset,
+} = spreadsheetOutGetSlice.actions;
+
+export const spreadsheetOutGetReducer = spreadsheetOutGetSlice.reducer;

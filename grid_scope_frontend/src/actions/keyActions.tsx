@@ -10,6 +10,12 @@ import {
     keyDeleteRequest,
     keyDeleteSuccess,
     keyDeleteFail,
+    keyEditRequest,
+    keyEditSuccess,
+    keyEditFail,
+    keyGetRequest,
+    keyGetSuccess,
+    keyGetFail,
 } from '../reducers/keySlices'; 
 
 
@@ -45,12 +51,12 @@ export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: 
     }
 };
 
-type KeyCreateType={
+type KeyType={
     label:string, 
     key:string
 }
 
-export const createKey = (keyCreate: KeyCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const createKey = (keyCreate: KeyType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
         dispatch(keyCreateRequest());
 
@@ -115,3 +121,68 @@ export const deleteKey = (id: string) => async (dispatch: AppDispatch, getState:
         );
     }
 }
+
+export const getKey = (id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(keyGetRequest());
+
+        const {
+            authTokens,
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            },
+        };
+
+        const { data } = await axios.get(
+            `http://127.0.0.1:8000/api/spreadsheets/keys/${id}`,
+            config
+        );
+
+        dispatch(keyGetSuccess(data));
+
+    } catch (err) {
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+            keyGetFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
+        );
+    }
+};
+
+export const editKey = (keyEdit: KeyType, id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(keyEditRequest());
+
+        const {
+            authTokens,
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            },
+        };
+
+        const { data } = await axios.put(
+            `http://127.0.0.1:8000/api/spreadsheets/keys/edit/${id}`,
+            keyEdit,
+            config
+        );
+
+        dispatch(keyEditSuccess(data));
+
+    } catch (err) {
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+            keyEditFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
+        );
+    }
+};

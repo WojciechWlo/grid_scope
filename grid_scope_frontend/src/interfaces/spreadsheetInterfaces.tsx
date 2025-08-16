@@ -18,3 +18,15 @@ export interface SpreadsheetDeleteState{
     response?: any;
     error?: string;    
 }
+
+export interface SpreadsheetEditState{
+    loading?: boolean;
+    response?: any;
+    error?: string;    
+}
+
+export interface SpreadsheetState{
+    loading?: boolean;
+    spreadsheet?: any;
+    error?: string;    
+}

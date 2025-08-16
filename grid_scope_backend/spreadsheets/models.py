@@ -55,17 +55,24 @@ def validate_excel_cell(value):
 class Key(models.Model):
     key = models.CharField(unique=False,max_length=100, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="keys_created") 
+    updated_at = models.DateTimeField(auto_now=True)
+    updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="keys_updated") 
+
     def __str__(self):
         return self.label
     
 class Spreadsheet(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False) 
     key = models.ForeignKey(Key, on_delete=models.CASCADE, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     url = models.URLField(max_length=100,null=False, blank=False)
     is_public = models.BooleanField(default=True)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheets_created") 
+    updated_at = models.DateTimeField(auto_now=True)
+    updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheets_updated") 
+
     def __str__(self):
         return self.label
 
@@ -77,6 +84,10 @@ class SpreadsheetIn(models.Model):
         validators=[validate_excel_range],
         help_text="Enter a valid Excel range, e.g., A1:XFD1048576"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheetsin_created") 
+    updated_at = models.DateTimeField(auto_now=True)
+    updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="spreadsheetsin_updated") 
 
     def __str__(self):
         return self.label
@@ -89,6 +100,49 @@ class SpreadsheetOut(models.Model):
         validators=[validate_excel_cell],
         help_text="Enter a valid Excel cell, e.g., B12"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="spreadsheetsout_created") 
+    updated_at = models.DateTimeField(auto_now=True)
+    updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheetsout_updated") 
 
     def __str__(self):
         return self.label
+
+class Process(models.Model):
+    label = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="processes_created") 
+    updated_at = models.DateTimeField(auto_now=True)
+    updating_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="processes_updated") 
+
+    def __str__(self):
+        return self.label
+    
+class ProcessSpreadsheetIn(models.Model):
+    process = models.ForeignKey(
+        Process, on_delete=models.CASCADE, null=False, blank=False
+    )
+    spreadsheet_in = models.ForeignKey(
+        SpreadsheetIn, on_delete=models.CASCADE, null=False, blank=False
+    )
+
+    class Meta:
+        unique_together = ("process", "spreadsheet_in")
+
+    def __str__(self):
+        return f"Process {self.process.label} ← SpreadsheetIn {self.spreadsheet_in.label}"
+
+
+class ProcessSpreadsheetOut(models.Model):
+    process = models.ForeignKey(
+        Process, on_delete=models.CASCADE, null=False, blank=False
+    )
+    spreadsheet_out = models.ForeignKey(
+        SpreadsheetOut, on_delete=models.CASCADE, null=False, blank=False
+    )
+
+    class Meta:
+        unique_together = ("process", "spreadsheet_out")
+
+    def __str__(self):
+        return f"Process {self.process.label} → SpreadsheetOut {self.spreadsheet_out.label}"

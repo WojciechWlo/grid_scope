@@ -37,7 +37,7 @@ function SpreadsheetListScreen() {
         navigate("/addspreadsheet")
 	}
 	const editSpreadsheetHandler = (id:number)=>{
-
+        navigate(`/editspreadsheet/${id}`)
 	}
 	const deleteSpreadsheetHandler = (id:string)=>{
         if(window.confirm('Are you sure you want to delete this spreadsheet?')){

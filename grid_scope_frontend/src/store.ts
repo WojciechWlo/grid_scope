@@ -7,23 +7,31 @@ import { AuthTokensState } from './interfaces/userInterfaces';
 import { 
 	keyListReducer,
 	keyCreateReducer,
-	keyDeleteReducer
+	keyDeleteReducer,
+	keyEditReducer,
+	keyGetReducer,
 
 } from './reducers/keySlices';
 import {
     spreadsheetListReducer,
 	spreadsheetCreateReducer,
 	spreadsheetDeleteReducer,
+	spreadsheetEditReducer,
+	spreadsheetGetReducer,
 }  from './reducers/spreadsheetSlices';
 import {
     spreadsheetInListReducer,
 	spreadsheetInCreateReducer,
 	spreadsheetInDeleteReducer,
+	spreadsheetInEditReducer,
+	spreadsheetInGetReducer,
 }  from './reducers/spreadsheetInSlices';
 import {
     spreadsheetOutListReducer,
     spreadsheetOutCreateReducer,
     spreadsheetOutDeleteReducer,
+	spreadsheetOutEditReducer,
+	spreadsheetOutGetReducer,
 } from './reducers/spreadsheetOutSlices';
 
 function loadAuthTokens(): any | null {
@@ -44,15 +52,23 @@ const rootReducer = combineReducers({
 	spreadsheetList : spreadsheetListReducer,
 	spreadsheetCreate : spreadsheetCreateReducer,
 	spreadsheetDelete : spreadsheetDeleteReducer,
+	spreadsheetEdit : spreadsheetEditReducer,
+	spreadsheetGet : spreadsheetGetReducer,
 	spreadsheetInList : spreadsheetInListReducer,
 	spreadsheetInCreate : spreadsheetInCreateReducer,
 	spreadsheetInDelete : spreadsheetInDeleteReducer,
+	spreadsheetInEdit : spreadsheetInEditReducer,
+	spreadsheetInGet : spreadsheetInGetReducer,
     spreadsheetOutList: spreadsheetOutListReducer,
     spreadsheetOutCreate: spreadsheetOutCreateReducer,
-    spreadsheetOutDelete: spreadsheetOutDeleteReducer,	
+    spreadsheetOutDelete: spreadsheetOutDeleteReducer,
+	spreadsheetOutEdit : spreadsheetOutEditReducer,
+	spreadsheetOutGet : spreadsheetOutGetReducer,	
 	keyList : keyListReducer,
 	keyCreate : keyCreateReducer,
 	keyDelete : keyDeleteReducer,
+	keyEdit : keyEditReducer,
+	keyGet : keyGetReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

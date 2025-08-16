@@ -23,6 +23,6 @@ COPY . .
 
 RUN chmod +x wait-for-it.sh entrypoint.sh
 
-#ENTRYPOINT ["./entrypoint.sh"]
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["tail", "-f", "/dev/null"]

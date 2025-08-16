@@ -11,12 +11,12 @@ import SpreadsheetInListScreen from './screens/SpreadsheetInListScreen';
 import SpreadsheetListScreen from './screens/SpreadsheetListScreen';
 import LoginScreen from './screens/LoginScreen';
 import PrivateRoute from './components/PrivateRoute';
-import AddSpreadsheetScreen from './screens/AddSpreadsheetScreen';
+import FormSpreadsheetScreen from './screens/FormSpreadsheetScreen';
 import KeyListScreen from './screens/KeyListScreen';
-import AddKeyScreen from './screens/AddKeyScreen';
+import FormKeyScreen from './screens/FormKeyScreen';
 import { TokenRefreshProvider } from './components/TokenRefreshProvider';
-import AddSpreadsheetInScreen from './screens/AddSpreadsheetInScreen';
-import AddSpreadsheetOutScreen from './screens/AddSpreadsheetOutScreen';
+import FormSpreadsheetInScreen from './screens/FormSpreadsheetInScreen';
+import FormSpreadsheetOutScreen from './screens/FormSpreadsheetOutScreen';
 
 function App() {
 	return (
@@ -32,11 +32,16 @@ function App() {
 									<Route path='/spreadsheetinlist' element={<PrivateRoute><SpreadsheetInListScreen/></PrivateRoute>} />
 									<Route path='/spreadsheetoutlist' element={<PrivateRoute><SpreadsheetOutListScreen/></PrivateRoute>} />
 									<Route path='/login' element={<LoginScreen/>} />
-									<Route path='/addspreadsheet' element={<PrivateRoute><AddSpreadsheetScreen/></PrivateRoute>} />
-									<Route path='/addspreadsheetin' element={<PrivateRoute><AddSpreadsheetInScreen/></PrivateRoute>} />
-									<Route path='/addspreadsheetout' element={<PrivateRoute><AddSpreadsheetOutScreen/></PrivateRoute>} />									
+									<Route path='/addspreadsheet' element={<PrivateRoute><FormSpreadsheetScreen/></PrivateRoute>} />
+									<Route path='/addspreadsheetin' element={<PrivateRoute><FormSpreadsheetInScreen/></PrivateRoute>} />
+									<Route path='/addspreadsheetout' element={<PrivateRoute><FormSpreadsheetOutScreen/></PrivateRoute>} />
+									<Route path='/editspreadsheet/:id' element={<PrivateRoute><FormSpreadsheetScreen/></PrivateRoute>} />
+									<Route path='/editspreadsheetin/:id' element={<PrivateRoute><FormSpreadsheetInScreen/></PrivateRoute>} />
+									<Route path='/editspreadsheetout/:id' element={<PrivateRoute><FormSpreadsheetOutScreen/></PrivateRoute>} />										
 									<Route path='/keylist' element={<PrivateRoute><KeyListScreen/></PrivateRoute>} />
-									<Route path='/addkey' element={<PrivateRoute><AddKeyScreen/></PrivateRoute>} />
+									<Route path='/addkey' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
+									<Route path='/editkey/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
+									<Route path='/editspreadsheet/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
 								</Routes>
 							</Container>
 						</main>

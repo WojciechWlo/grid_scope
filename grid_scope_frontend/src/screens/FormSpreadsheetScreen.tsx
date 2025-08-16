@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react'
 import {Form, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import {useDispatch, useSelector} from 'react-redux'
-import {useNavigate, useLocation } from 'react-router-dom'
-import { createSpreadsheet } from '../actions/spreadsheetActions'
+import {useNavigate, useParams } from 'react-router-dom'
+import { createSpreadsheet, editSpreadsheet, getSpreadsheet } from '../actions/spreadsheetActions'
 import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listKeys } from '../actions/keyActions'
 import Select from "react-select";
-import { spreadsheetCreateReset } from '../reducers/spreadsheetSlices'
+import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset } from '../reducers/spreadsheetSlices'
 
 type Key={
     id: number,
@@ -17,7 +17,10 @@ type Key={
     key: string,
 }
 
-function AddSpreadsheetScreen() {
+function FormSpreadsheetScreen() {
+
+	const params = useParams<{ id?: string }>();
+	const isEdit = !!params.id;
 
 	const navigate = useNavigate()
 	const [label, setLabel] = useState('')
@@ -31,6 +34,12 @@ function AddSpreadsheetScreen() {
     const spreadsheetCreate = useSelector((state: RootState)=>state.spreadsheetCreate)
     const {error, loading, response} = spreadsheetCreate
 
+	const spreadsheetEdit = useSelector((state: RootState)=>state.spreadsheetEdit)
+	const {error:errorEdit, loading:loadingEdit, response:responseEdit} = spreadsheetEdit
+
+	const spreadsheetGet = useSelector((state: RootState)=>state.spreadsheetGet)
+	const {error:errorGet, loading:loadingGet, spreadsheet:spreadsheetResponse} = spreadsheetGet
+	
 
 	const keyList = useSelector((state: RootState)=>state.keyList)
 	const {loading:loadingKeyList, error:errorKeyList, keys=null} = keyList
@@ -39,38 +48,66 @@ function AddSpreadsheetScreen() {
 	const {userInfo} = userLogin
 	
 	useEffect(()=>{
-		if(userInfo){
-			dispatch(listKeys("?page=0"))
+		dispatch(listKeys("?page=0"))
+		if(isEdit)
+		{
+			dispatch(getSpreadsheet(params.id))
 		}
-	},[dispatch, userInfo])
+	},[dispatch])
 
+	useEffect(() => {
+		if (isEdit && spreadsheetResponse) {
+			setLabel(spreadsheetResponse.label);
+			setUrl(spreadsheetResponse.url);
+			setKeyLabel(spreadsheetResponse.key);
+			setIsPublic(spreadsheetResponse.is_public);
+		}
+	}, [spreadsheetResponse, isEdit]);
 
 	useEffect(()=>{
-		dispatch(spreadsheetCreateReset())
-		if(response)
+		if(isEdit)
+		{
+			dispatch(spreadsheetEditReset())
+			dispatch(spreadsheetGetReset())			
+		}
+		else{
+			dispatch(spreadsheetCreateReset())
+		}
+		if(response || responseEdit)
 		{
 			navigate(`/spreadsheetlist`)
 		}
 
-	},[response, navigate])
+	},[response, responseEdit, navigate])
 
 
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()
-		dispatch(createSpreadsheet({
-			label,
-			url,
-			key_label:keyLabel,
-			is_public:isPublic,
-		}))
+		if(isEdit){
+			dispatch(editSpreadsheet({
+				label,
+				url,
+				key_label:keyLabel,
+				is_public:isPublic,				
+			}, params.id))
 
+		}else{
+			dispatch(createSpreadsheet({
+				label,
+				url,
+				key_label:keyLabel,
+				is_public:isPublic,
+			}))
+		}
 	}
 
     return (
 		<FormContainer>
-			<h1>Add Spreadsheet</h1>
+			<h1>{isEdit? "Edit" : "Add"} Spreadsheet</h1>
+			{errorGet && <Message variant='danger'>{errorGet}</Message>}			
+			{errorEdit && <Message variant='danger'>{errorEdit}</Message>}
 			{error && <Message variant='danger'>{error}</Message>}
-			{loading && <Loader/>}
+			{(loading || loadingEdit || loadingGet) && <Loader/>}
 			<Form onSubmit={submitHandler}>
 				
 				<Form.Group controlId='label'>
@@ -131,10 +168,10 @@ function AddSpreadsheetScreen() {
 				</Form.Group>
 
 				<br/>
-				<Button type="submit" variant='primary'>Add</Button>
+				<Button type="submit" variant='primary'>{isEdit? "Edit" : "Add"}</Button>
 			</Form>
 		</FormContainer>
     )
 }
 
-export default AddSpreadsheetScreen
+export default FormSpreadsheetScreen

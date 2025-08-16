@@ -10,6 +10,12 @@ import {
     spreadsheetDeleteRequest,
     spreadsheetDeleteSuccess,
     spreadsheetDeleteFail,
+    spreadsheetGetRequest,
+    spreadsheetGetSuccess,
+    spreadsheetGetFail,
+    spreadsheetEditRequest,
+    spreadsheetEditSuccess,
+    spreadsheetEditFail,
 } from '../reducers/spreadsheetSlices'; 
 
 
@@ -45,14 +51,14 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
     }
 };
 
-type SpreadsheetCreateType={
+type SpreadsheetType={
     label:string, 
     url:string, 
     key_label:string,
     is_public: boolean
 }
 
-export const createSpreadsheet = (spreadsheetCreate: SpreadsheetCreateType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+export const createSpreadsheet = (spreadsheetCreate: SpreadsheetType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
         dispatch(spreadsheetCreateRequest());
 
@@ -117,3 +123,68 @@ export const deleteSpreadsheet = (id: string) => async (dispatch: AppDispatch, g
         );
     }
 }
+
+export const getSpreadsheet = (id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(spreadsheetGetRequest());
+
+        const {
+            authTokens,
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            },
+        };
+
+        const { data } = await axios.get(
+            `http://127.0.0.1:8000/api/spreadsheets/${id}`,
+            config
+        );
+
+        dispatch(spreadsheetGetSuccess(data));
+
+    } catch (err) {
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+            spreadsheetGetFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
+        );
+    }
+};
+
+export const editSpreadsheet = (spreadsheetEdit: SpreadsheetType, id: string) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(spreadsheetEditRequest());
+
+        const {
+            authTokens,
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            },
+        };
+
+        const { data } = await axios.put(
+            `http://127.0.0.1:8000/api/spreadsheets/edit/${id}`,
+            spreadsheetEdit,
+            config
+        );
+
+        dispatch(spreadsheetEditSuccess(data));
+
+    } catch (err) {
+        const error = err as AxiosError<{ detail: string }>;
+        dispatch(
+            spreadsheetEditFail(
+                error.response && error.response.data.detail ? error.response.data.detail : error.message
+            )
+        );
+    }
+};

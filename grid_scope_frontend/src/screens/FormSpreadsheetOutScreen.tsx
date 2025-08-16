@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createSpreadsheetOut } from '../actions/spreadsheetOutActions';
+import { useNavigate, useParams } from 'react-router-dom';
+import { createSpreadsheetOut, editSpreadsheetOut, getSpreadsheetOut } from '../actions/spreadsheetOutActions';
 import type { RootState, AppDispatch } from '../store';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Select from 'react-select';
-import { spreadsheetOutCreateReset } from '../reducers/spreadsheetOutSlices';
+import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset } from '../reducers/spreadsheetOutSlices';
 import { listSpreadsheets } from '../actions/spreadsheetActions';
 
 type Spreadsheet = {
@@ -18,7 +18,10 @@ type Spreadsheet = {
     is_public: string;
 };
 
-function AddSpreadsheetOutScreen() {
+function FormSpreadsheetOutScreen() {
+	const params = useParams<{ id?: string }>();
+	const isEdit = !!params.id;
+
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
@@ -31,41 +34,74 @@ function AddSpreadsheetOutScreen() {
     const spreadsheetOutCreate = useSelector((state: RootState) => state.spreadsheetOutCreate);
     const { error, loading, response } = spreadsheetOutCreate;
 
+    const spreadsheetOutEdit = useSelector((state: RootState)=>state.spreadsheetOutEdit)
+    const {error:errorEdit, loading:loadingEdit, response:responseEdit} = spreadsheetOutEdit
+
+    const spreadsheetOutGet = useSelector((state: RootState)=>state.spreadsheetOutGet)
+    const {error:errorGet, loading:loadingGet, spreadsheetOut:spreadsheetOutResponse} = spreadsheetOutGet
+    
     const spreadsheetList = useSelector((state: RootState) => state.spreadsheetList);
     const { loading: loadingSpreadsheetList, error: errorSpreadsheetList, spreadsheets = null } = spreadsheetList;
 
     const userLogin = useSelector((state: RootState) => state.userLogin);
     const { userInfo } = userLogin;
 
-    useEffect(() => {
-        if (userInfo) {
-            dispatch(listSpreadsheets('?page=0'));
+    useEffect(()=>{
+        dispatch(listSpreadsheets("?page=0"))
+        if(isEdit)
+        {
+            dispatch(getSpreadsheetOut(params.id))
         }
-    }, [dispatch, userInfo]);
+    },[dispatch])
 
     useEffect(() => {
-        dispatch(spreadsheetOutCreateReset());
-        if (response) {
-            navigate(`/spreadsheetOutlist`);
+        if (isEdit && spreadsheetOutResponse) {
+            setLabel(spreadsheetOutResponse.label);
+            setSpreadsheetLabel(spreadsheetOutResponse.spreadsheet);
+            setDataCell(spreadsheetOutResponse.data_cell);
         }
-    }, [response, navigate, dispatch]);
+    }, [spreadsheetOutResponse, isEdit]);
+
+    useEffect(()=>{
+        if(isEdit)
+        {
+            dispatch(spreadsheetOutEditReset())
+            dispatch(spreadsheetOutGetReset())			
+        }
+        else{
+            dispatch(spreadsheetOutCreateReset())
+        }
+        if(response || responseEdit)
+        {
+            navigate(`/spreadsheetOutlist`)
+        }
+
+    },[response, responseEdit, navigate])
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        dispatch(
-            createSpreadsheetOut({
+        e.preventDefault()
+        if(isEdit){
+            dispatch(editSpreadsheetOut({
                 label,
-                spreadsheet_label: spreadsheetLabel,
+                spreadsheet_label:spreadsheetLabel,
                 data_cell: dataCell,
-            })
-        );
+            },params.id))
+        }else{
+            dispatch(createSpreadsheetOut({
+                label,
+                spreadsheet_label:spreadsheetLabel,
+                data_cell: dataCell,
+            }))
+        }
     };
 
     return (
         <FormContainer>
-            <h1>Add Output Spreadsheet</h1>
-            {error && <Message variant="danger">{error}</Message>}
-            {loading && <Loader />}
+			<h1>{isEdit? "Edit" : "Add"} Output Spreadsheet</h1>
+			{errorGet && <Message variant='danger'>{errorGet}</Message>}			
+			{errorEdit && <Message variant='danger'>{errorEdit}</Message>}
+			{error && <Message variant='danger'>{error}</Message>}
+			{(loading || loadingEdit || loadingGet) && <Loader/>}
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId="label">
                     <Form.Label>Label</Form.Label>
@@ -112,12 +148,10 @@ function AddSpreadsheetOutScreen() {
                 </Form.Group>
 
                 <br />
-                <Button type="submit" variant="primary">
-                    Add
-                </Button>
+                <Button type="submit" variant="primary">{isEdit? "Edit" : "Add"}</Button>
             </Form>
         </FormContainer>
     );
 }
 
-export default AddSpreadsheetOutScreen;
+export default FormSpreadsheetOutScreen;

@@ -10,10 +10,10 @@ import {
     authTokensUpdateFail,
     authTokensReset,
 } from '../reducers/userSlices'; 
-import { keyListReset } from '../reducers/keySlices';
-import { spreadsheetListReset} from '../reducers/spreadsheetSlices';
-import { spreadsheetInListReset} from '../reducers/spreadsheetInSlices';
-import { spreadsheetOutListReset } from '../reducers/spreadsheetOutSlices';
+import { keyCreateReset, keyEditReset, keyGetReset, keyListReset } from '../reducers/keySlices';
+import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset, spreadsheetListReset} from '../reducers/spreadsheetSlices';
+import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset, spreadsheetInListReset} from '../reducers/spreadsheetInSlices';
+import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset, spreadsheetOutListReset } from '../reducers/spreadsheetOutSlices';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -50,9 +50,21 @@ export const logout = () => (dispatch: AppDispatch) => {
     localStorage.removeItem('authTokens');    
     dispatch(authTokensReset());
     dispatch(keyListReset())
-    dispatch(spreadsheetListReset())    
+    dispatch(keyCreateReset())
+    dispatch(keyEditReset())
+    dispatch(keyGetReset())
+    dispatch(spreadsheetListReset())
+    dispatch(spreadsheetCreateReset())
+    dispatch(spreadsheetEditReset())
+    dispatch(spreadsheetGetReset())
     dispatch(spreadsheetInListReset())
-    dispatch(spreadsheetOutListReset())    
+    dispatch(spreadsheetInCreateReset())
+    dispatch(spreadsheetInEditReset())
+    dispatch(spreadsheetInGetReset())
+    dispatch(spreadsheetOutListReset())
+    dispatch(spreadsheetOutCreateReset())
+    dispatch(spreadsheetOutEditReset())
+    dispatch(spreadsheetOutGetReset())    
 };
 
 export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {

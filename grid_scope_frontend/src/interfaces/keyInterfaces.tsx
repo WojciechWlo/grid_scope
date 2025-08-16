@@ -12,6 +12,18 @@ export interface KeyCreateState{
     error?: string;    
 }
 
+export interface KeyEditState{
+    loading?: boolean;
+    response?: any;
+    error?: string;    
+}
+
+export interface KeyState{
+    loading?: boolean;
+    key?: any;
+    error?: string;    
+}
+
 export interface KeyDeleteState{
     loading?: boolean;
     response?: any;

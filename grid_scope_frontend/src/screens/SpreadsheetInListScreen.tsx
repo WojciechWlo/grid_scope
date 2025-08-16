@@ -37,7 +37,7 @@ function SpreadsheetInListScreen() {
         navigate("/addspreadsheetin")
 	}
 	const editSpreadsheetInHandler = (id:number)=>{
-
+        navigate(`/editspreadsheetin/${id}`)
 	}
 	const deleteSpreadsheetInHandler = (id:string)=>{
         if(window.confirm('Are you sure you want to delete this spreadsheetIn?')){

@@ -2,15 +2,15 @@ import React, {useState, useEffect} from 'react'
 import {Form, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import {useDispatch, useSelector} from 'react-redux'
-import {useNavigate, useLocation, data } from 'react-router-dom'
-import { createSpreadsheetIn } from '../actions/spreadsheetInActions'
+import {useNavigate, useParams} from 'react-router-dom'
+import { createSpreadsheetIn, editSpreadsheetIn, getSpreadsheetIn } from '../actions/spreadsheetInActions'
 import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listKeys } from '../actions/keyActions'
 import Select from "react-select";
-import { spreadsheetInCreateReset } from '../reducers/spreadsheetInSlices'
-import { listSpreadsheets } from '../actions/spreadsheetActions'
+import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset } from '../reducers/spreadsheetInSlices'
+import { getSpreadsheet, listSpreadsheets } from '../actions/spreadsheetActions'
 
 type Spreadsheet={
     id: number,
@@ -19,7 +19,9 @@ type Spreadsheet={
 	is_public: string,
 }
 
-function AddSpreadsheetInScreen() {
+function FormSpreadsheetInScreen() {
+	const params = useParams<{ id?: string }>();
+	const isEdit = !!params.id;
 
 	const navigate = useNavigate()
 	const [label, setLabel] = useState('')
@@ -32,7 +34,12 @@ function AddSpreadsheetInScreen() {
     const spreadsheetInCreate = useSelector((state: RootState)=>state.spreadsheetInCreate)
     const {error, loading, response} = spreadsheetInCreate
 
+	const spreadsheetInEdit = useSelector((state: RootState)=>state.spreadsheetInEdit)
+	const {error:errorEdit, loading:loadingEdit, response:responseEdit} = spreadsheetInEdit
 
+	const spreadsheetInGet = useSelector((state: RootState)=>state.spreadsheetInGet)
+	const {error:errorGet, loading:loadingGet, spreadsheetIn:spreadsheetInResponse} = spreadsheetInGet
+	
 	const spreadsheetList = useSelector((state: RootState)=>state.spreadsheetList)
 	const {loading:loadingSpreadsheetList, error:errorSpreadsheetList, spreadsheets=null} = spreadsheetList
 
@@ -40,37 +47,63 @@ function AddSpreadsheetInScreen() {
 	const {userInfo} = userLogin
 	
 	useEffect(()=>{
-		if(userInfo){
-			dispatch(listSpreadsheets("?page=0"))
+		dispatch(listSpreadsheets("?page=0"))
+		if(isEdit)
+		{
+			dispatch(getSpreadsheetIn(params.id))
 		}
-	},[dispatch, userInfo])
+	},[dispatch])
 
+	useEffect(() => {
+		if (isEdit && spreadsheetInResponse) {
+			setLabel(spreadsheetInResponse.label);
+			setSpreadsheetLabel(spreadsheetInResponse.spreadsheet);
+			setDataCellRange(spreadsheetInResponse.data_cell_range);
+		}
+	}, [spreadsheetInResponse, isEdit]);
 
 	useEffect(()=>{
-		dispatch(spreadsheetInCreateReset())
-		if(response)
+		if(isEdit)
+		{
+			dispatch(spreadsheetInEditReset())
+			dispatch(spreadsheetInGetReset())			
+		}
+		else{
+			dispatch(spreadsheetInCreateReset())
+		}
+		if(response || responseEdit)
 		{
 			navigate(`/spreadsheetInlist`)
 		}
 
-	},[response, navigate])
+	},[response, responseEdit, navigate])
 
 
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()
-		dispatch(createSpreadsheetIn({
-			label,
-			spreadsheet_label:spreadsheetLabel,
-			data_cell_range: dataCellRange,
-		}))
+		if(isEdit){
+			dispatch(editSpreadsheetIn({
+				label,
+				spreadsheet_label:spreadsheetLabel,
+				data_cell_range: dataCellRange,
+			},params.id))
+		}else{
+			dispatch(createSpreadsheetIn({
+				label,
+				spreadsheet_label:spreadsheetLabel,
+				data_cell_range: dataCellRange,
+			}))
+		}
 
 	}
 
     return (
 		<FormContainer>
-			<h1>Add Input Spreadsheet</h1>
+			<h1>{isEdit? "Edit" : "Add"} Input Spreadsheet</h1>
+			{errorGet && <Message variant='danger'>{errorGet}</Message>}			
+			{errorEdit && <Message variant='danger'>{errorEdit}</Message>}
 			{error && <Message variant='danger'>{error}</Message>}
-			{loading && <Loader/>}
+			{(loading || loadingEdit || loadingGet) && <Loader/>}
 			<Form onSubmit={submitHandler}>
 				
 				<Form.Group controlId='label'>
@@ -84,7 +117,7 @@ function AddSpreadsheetInScreen() {
 
 
 				<Form.Group controlId="key">
-					<Form.Label>Key</Form.Label>
+					<Form.Label>Spreadsheet</Form.Label>
 					{loadingSpreadsheetList ? (
 						<Loader />
 					) : errorSpreadsheetList ? (
@@ -119,10 +152,10 @@ function AddSpreadsheetInScreen() {
 				</Form.Group>
 
 				<br/>
-				<Button type="submit" variant='primary'>Add</Button>
+				<Button type="submit" variant='primary'>{isEdit? "Edit" : "Add"}</Button>
 			</Form>
 		</FormContainer>
     )
 }
 
-export default AddSpreadsheetInScreen
+export default FormSpreadsheetInScreen

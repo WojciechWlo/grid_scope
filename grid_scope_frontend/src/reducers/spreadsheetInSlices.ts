@@ -4,6 +4,8 @@ import {
 	SpreadsheetInListState,
 	SpreadsheetInCreateState,
 	SpreadsheetInDeleteState,
+	SpreadsheetInState,
+	SpreadsheetInEditState,
 } from '../interfaces/spreadsheetInInterfaces';
 
 const initialListState: SpreadsheetInListState = {};
@@ -120,3 +122,80 @@ export const {
 } = spreadsheetInDeleteSlice.actions;
 
 export const spreadsheetInDeleteReducer = spreadsheetInDeleteSlice.reducer;
+
+
+const initialEditState: SpreadsheetInEditState = {};
+
+const spreadsheetInEditSlice = createSlice({
+	name: 'spreadsheetInEdit',
+	initialState:initialEditState,
+	reducers: {
+		spreadsheetInEditRequest(state) {
+			state.loading = true;
+			state.error = undefined;
+			state.response = undefined;
+		},
+		spreadsheetInEditSuccess(state, action: PayloadAction<SpreadsheetInEditState>) {
+			state.loading = false;
+			state.response = action.payload;
+			state.error = undefined;
+		},
+		spreadsheetInEditFail(state, action: PayloadAction<string>) {
+			state.loading = false;
+			state.error = action.payload;
+			state.response = undefined;
+		},
+		spreadsheetInEditReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.response = undefined;
+		}
+	},
+});
+
+export const {
+	spreadsheetInEditRequest,
+	spreadsheetInEditSuccess,
+	spreadsheetInEditFail,
+	spreadsheetInEditReset,
+} = spreadsheetInEditSlice.actions;
+
+export const spreadsheetInEditReducer = spreadsheetInEditSlice.reducer;
+
+const initialGetState: SpreadsheetInState = {};
+
+const spreadsheetInGetSlice = createSlice({
+	name: 'spreadsheetIn',
+	initialState:initialGetState,
+	reducers: {
+		spreadsheetInGetRequest(state) {
+			state.loading = true;
+			state.error = undefined;
+			state.spreadsheetIn = undefined;
+		},
+		spreadsheetInGetSuccess(state, action: PayloadAction<SpreadsheetInState>) {
+			state.loading = false;
+			state.spreadsheetIn = action.payload;
+			state.error = undefined;
+		},
+		spreadsheetInGetFail(state, action: PayloadAction<string>) {
+			state.loading = false;
+			state.error = action.payload;
+			state.spreadsheetIn = undefined;
+		},
+		spreadsheetInGetReset(state){
+			state.loading =false;
+			state.error = undefined;
+			state.spreadsheetIn = undefined;
+		}
+	},
+});
+
+export const {
+	spreadsheetInGetRequest,
+	spreadsheetInGetSuccess,
+	spreadsheetInGetFail,
+	spreadsheetInGetReset,
+} = spreadsheetInGetSlice.actions;
+
+export const spreadsheetInGetReducer = spreadsheetInGetSlice.reducer;
