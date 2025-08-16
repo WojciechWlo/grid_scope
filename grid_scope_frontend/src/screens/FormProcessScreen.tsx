@@ -11,6 +11,10 @@ import { createProcess, editProcess, getProcess } from '../actions/processAction
 import { processCreateReset, processEditReset, processGetReset } from '../reducers/processReducers'
 import { listSpreadsheetsIn } from '../actions/spreadsheetInActions'
 import { listSpreadsheetsOut } from '../actions/spreadsheetOutActions'
+import AceEditor from 'react-ace';
+
+import 'ace-builds/src-noconflict/mode-sql';
+import 'ace-builds/src-noconflict/theme-tomorrow_night';
 
 type SpreadsheetIn={
     id: number,
@@ -196,14 +200,27 @@ function FormProcessScreen() {
 
 				<Form.Group controlId="query">
 					<Form.Label>Query</Form.Label>
-					<Form.Control
-						as="textarea"
-						rows={4}
-						placeholder="Enter query"
+					<AceEditor
+						mode="sql"
+						theme="tomorrow_night"
+						name="sql_editor"
 						value={query}
-						onChange={(e) => setQuery(e.target.value)}
+						onChange={(newValue: string) => setQuery(newValue)}
+						width="100%"
+						height="150px"
+						fontSize={14}
+						showPrintMargin={false}
+						showGutter={true}
+						highlightActiveLine={true}
+						style={{ zIndex: 0 }}
+						setOptions={{
+							showLineNumbers: true,
+							tabSize: 2,
+							useWorker: false,
+						}}
 					/>
 				</Form.Group>
+
 				<br/>
 				<Button type="submit" variant='primary'>{isEdit? "Edit" : "Add"}</Button>
 			</Form>
