@@ -35,7 +35,7 @@ export const listKeys = (keyword='') => async (dispatch: AppDispatch, getState: 
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/keys${keyword}`,
+            `http://127.0.0.1:8000/api/keys/${keyword}`,
             config
         );
 
@@ -72,7 +72,7 @@ export const createKey = (keyCreate: KeyType) => async (dispatch: AppDispatch, g
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/spreadsheets/keys/create`,
+            `http://127.0.0.1:8000/api/keys/create/`,
             keyCreate,
             config
         );
@@ -105,7 +105,7 @@ export const deleteKey = (id: string) => async (dispatch: AppDispatch, getState:
         }
 
         const{data} = await axios.delete(
-            `http://127.0.0.1:8000/api/spreadsheets/keys/delete/${id}`,
+            `http://127.0.0.1:8000/api/keys/delete/${id}/`,
             config
         )
 
@@ -138,7 +138,7 @@ export const getKey = (id: string) => async (dispatch: AppDispatch, getState: ()
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/keys/${id}`,
+            `http://127.0.0.1:8000/api/keys/${id}/`,
             config
         );
 
@@ -170,7 +170,7 @@ export const editKey = (keyEdit: KeyType, id: string) => async (dispatch: AppDis
         };
 
         const { data } = await axios.put(
-            `http://127.0.0.1:8000/api/spreadsheets/keys/edit/${id}`,
+            `http://127.0.0.1:8000/api/keys/edit/${id}/`,
             keyEdit,
             config
         );

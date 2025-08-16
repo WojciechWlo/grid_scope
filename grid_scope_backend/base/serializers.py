@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from spreadsheets.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet, Key, Process, ProcessSpreadsheetIn, ProcessSpreadsheetOut
+from base.models import SpreadsheetIn, SpreadsheetOut, Spreadsheet, Key, Process, ProcessSpreadsheetIn, ProcessSpreadsheetOut
 #from rest_framework_simplejwt.tokens import RefreshToken
 
 class SpreadsheetInSerializer(serializers.ModelSerializer):

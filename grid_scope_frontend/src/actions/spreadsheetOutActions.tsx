@@ -33,7 +33,7 @@ export const listSpreadsheetsOut = (keyword = '') => async (dispatch: AppDispatc
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/out${keyword}`,
+            `http://127.0.0.1:8000/api/spreadsheetsout${keyword}/`,
             config
         );
         dispatch(spreadsheetOutListSuccess(data));
@@ -67,7 +67,7 @@ export const createSpreadsheetOut = (spreadsheetOutCreate: SpreadsheetOutType) =
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/spreadsheets/out/create`,
+            `http://127.0.0.1:8000/api/spreadsheetsout/create/`,
             spreadsheetOutCreate,
             config
         );
@@ -97,7 +97,7 @@ export const deleteSpreadsheetOut = (id: string) => async (dispatch: AppDispatch
         };
 
         const { data } = await axios.delete(
-            `http://127.0.0.1:8000/api/spreadsheets/out/delete/${id}`,
+            `http://127.0.0.1:8000/api/spreadsheetsout/delete/${id}/`,
             config
         );
 
@@ -128,7 +128,7 @@ export const getSpreadsheetOut = (id: string) => async (dispatch: AppDispatch, g
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/out/${id}`,
+            `http://127.0.0.1:8000/api/spreadsheetsout/${id}/`,
             config
         );
 
@@ -160,7 +160,7 @@ export const editSpreadsheetOut = (spreadsheetOutEdit: SpreadsheetOutType, id: s
         };
 
         const { data } = await axios.put(
-            `http://127.0.0.1:8000/api/spreadsheets/out/edit/${id}`,
+            `http://127.0.0.1:8000/api/spreadsheetsout/edit/${id}/`,
             spreadsheetOutEdit,
             config
         );

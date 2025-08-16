@@ -27,7 +27,7 @@ export const login = (username: string, password: string) => async (dispatch: Ap
         };
 
         const { data } = await axios.post(
-        'http://127.0.0.1:8000/api/users/login',
+        'http://127.0.0.1:8000/api/users/login/',
         { username, password },
         config
         );
@@ -81,7 +81,7 @@ export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>R
             },
         };
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/users/tokens/refresh`,
+            `http://127.0.0.1:8000/api/users/tokens/refresh/`,
             {
                 refresh:authTokens.tokens.refresh,
             },
