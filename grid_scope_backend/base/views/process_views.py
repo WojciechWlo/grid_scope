@@ -345,7 +345,6 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
 def testProcess(request):
     client = InfisicalSDKClient(host=os.environ.get("SITE_URL"),token=os.environ.get("INFISICAL_CLIENT_TOKEN"))
 
-
     data = request.data
 
     spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])

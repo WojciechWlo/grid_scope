@@ -88,6 +88,7 @@ services:
       - NODE_ENV=production
     networks:
       - infisical
+      - infisical_backend
 
   redis:
     image: redis
