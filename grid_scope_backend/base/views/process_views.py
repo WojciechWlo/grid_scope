@@ -12,6 +12,8 @@ import requests
 import io
 from django.db import connection
 from psycopg2 import sql
+from infisical_sdk import InfisicalSDKClient
+import os
 # Create your views here.
 
 @api_view(['GET'])
@@ -341,6 +343,8 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def testProcess(request):
+    client = InfisicalSDKClient(host=os.environ.get("SITE_URL"),token=os.environ.get("INFISICAL_CLIENT_TOKEN"))
+
     data = request.data
 
     spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])

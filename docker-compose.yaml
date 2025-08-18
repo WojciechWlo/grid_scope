@@ -16,6 +16,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
+      - SITE_URL=${SITE_URL}
+      - INFISICAL_CLIENT_TOKEN=${INFISICAL_CLIENT_TOKEN}
       
   frontend:
     build:
