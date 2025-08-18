@@ -38,7 +38,8 @@ import{
 	processDeleteReducer,
     processCreateReducer,
 	processEditReducer,
-	processGetReducer,	
+	processGetReducer,
+	processTestReducer,
 }from './reducers/processReducers';
 
 function loadAuthTokens(): any | null {
@@ -81,6 +82,7 @@ const rootReducer = combineReducers({
 	processCreate : processCreateReducer,
 	processEdit : processEditReducer,
 	processGet : processGetReducer,	
+	processTest : processTestReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

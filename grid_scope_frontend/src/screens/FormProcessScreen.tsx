@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Form, Button} from 'react-bootstrap'
+import {Form, Button, Table, Col, Row} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -7,8 +7,8 @@ import type { RootState,AppDispatch } from '../store'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Select from "react-select";
-import { createProcess, editProcess, getProcess } from '../actions/processActions'
-import { processCreateReset, processEditReset, processGetReset } from '../reducers/processReducers'
+import { createProcess, editProcess, getProcess, testProcess } from '../actions/processActions'
+import { processCreateReset, processEditReset, processGetReset, processTestReset } from '../reducers/processReducers'
 import { listSpreadsheetsIn } from '../actions/spreadsheetInActions'
 import { listSpreadsheetsOut } from '../actions/spreadsheetOutActions'
 import AceEditor from 'react-ace';
@@ -50,6 +50,9 @@ function FormProcessScreen() {
 	const processGet = useSelector((state: RootState)=>state.processGet)
 	const {error:errorGet, loading:loadingGet, process:processResponse} = processGet
 	
+	const processTest = useSelector((state: RootState)=>state.processTest)
+	const {error:errorTest, loading:loadingTest, response:processTestResponse} = processTest
+
 	const spreadsheetInList = useSelector((state: RootState)=>state.spreadsheetInList)
 	const {loading:loadingSpreadsheetInList, error:errorSpreadsheetInList, spreadsheetsIn=null} = spreadsheetInList
 
@@ -61,7 +64,8 @@ function FormProcessScreen() {
 	
 	useEffect(()=>{
 		dispatch(listSpreadsheetsIn("?page=0"))
-		dispatch(listSpreadsheetsOut("?page=0"))		
+		dispatch(listSpreadsheetsOut("?page=0"))
+		dispatch(processTestReset())
 		if(isEdit)
 		{
 			dispatch(getProcess(params.id))
@@ -86,6 +90,7 @@ function FormProcessScreen() {
 		else{
 			dispatch(processCreateReset())
 		}
+		dispatch(processTestReset())
 		if(response || responseEdit)
 		{
 			navigate(`/processlist`)
@@ -114,7 +119,19 @@ function FormProcessScreen() {
 
 	}
 
+	const testHandler=()=>{
+		dispatch(testProcess({
+			label,
+			spreadsheet_in_labels:spreadsheetInLabels,
+			spreadsheet_out_labels:spreadsheetOutLabels,
+			query,
+		}))
+	}
+
+
+
     return (
+		<>
 		<FormContainer>
 			<h1>{isEdit? "Edit" : "Add"} Process</h1>
 			{errorGet && <Message variant='danger'>{errorGet}</Message>}			
@@ -223,8 +240,63 @@ function FormProcessScreen() {
 
 				<br/>
 				<Button type="submit" variant='primary'>{isEdit? "Edit" : "Add"}</Button>
+				<br/>
 			</Form>
 		</FormContainer>
+		<div>			
+			<Row className='align-items-center'>
+				<Col>
+					<h1>Test</h1>
+				</Col>
+				<Col className='text-right'>
+					<Button variant="success" className='my-3' onClick={()=>testHandler()}>
+						<i className="fas fa-play"></i> Test
+					</Button>
+				</Col>
+			</Row>
+				{loadingTest ? (
+					<Loader />
+				) : errorTest && errorTest.length > 0 ? (
+					<Message variant="danger">
+						{errorTest.map((err, idx) => (
+							<div key={idx}>{err}</div>
+						))}
+					</Message>
+				) : (
+					<div>
+						<Table striped bordered hover responsive className="table-sm">
+
+							{processTestResponse?.results?.sql_output?.rows &&
+							processTestResponse.results.sql_output.rows.length > 0 && (
+							<>
+								<thead>
+								<tr>
+									{processTestResponse.results.sql_output.columns.map(
+									(colName: string, idx: number) => (
+										<th key={idx}>{colName}</th>
+									)
+									)}
+								</tr>
+								</thead>
+								<tbody>
+								{processTestResponse.results.sql_output.rows.map(
+									(row: any[], rowIdx: number) => (
+									<tr key={rowIdx}>
+										{row.map((value: any, colIdx: number) => (
+										<td key={colIdx}>{String(value)}</td>
+										))}
+									</tr>
+									)
+								)}
+								</tbody>
+							</>
+							)}
+
+						</Table>
+					</div>
+				)}
+		</div>	
+		</>
     )
 }
 

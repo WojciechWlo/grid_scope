@@ -16,6 +16,9 @@ import {
     processGetRequest,
     processGetSuccess,
     processGetFail,
+    processTestRequest,
+    processTestSuccess,
+    processTestFail,
 } from '../reducers/processReducers'; 
 
 
@@ -123,6 +126,7 @@ export const editProcess = (processEdit: ProcessType, id: string) => async (disp
         );
     }
 };
+
 export const createProcess = (processCreate: ProcessType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
     try {
         dispatch(processCreateRequest());
@@ -185,5 +189,43 @@ export const getProcess = (id: string) => async (dispatch: AppDispatch, getState
                 error.response && error.response.data.detail ? error.response.data.detail : error.message
             )
         );
+    }
+};
+
+export const testProcess = (processTest: ProcessType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
+    try {
+        dispatch(processTestRequest());
+
+        const { authTokens } = getState()
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${authTokens.tokens.access}`
+            },
+        };
+
+        const { data } = await axios.post(
+            `http://127.0.0.1:8000/api/processes/test/`,
+            processTest,
+            config
+        );
+
+        dispatch(processTestSuccess(data));
+
+    } catch (err) {
+        const error = err as AxiosError<{ errors?: string[]; details?: string }>;
+
+        let messages: string[] = [];
+
+        if (error.response?.data?.errors) {
+            messages = error.response.data.errors;
+        } else if (error.response?.data?.details) {
+            messages = [error.response.data.details];
+        } else {
+            messages = [error.message];
+        }
+
+        dispatch(processTestFail(messages));
     }
 };
