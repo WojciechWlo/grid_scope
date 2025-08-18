@@ -18,6 +18,10 @@ services:
       - DB_NAME=${DB_NAME}
       - SITE_URL=${SITE_URL}
       - INFISICAL_CLIENT_TOKEN=${INFISICAL_CLIENT_TOKEN}
+    networks:
+      - infisical_backend
+      - backend_frontend
+      - mssql_backend
       
   frontend:
     build:
@@ -30,6 +34,8 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
       - WATCHPACK_POLLING=${WATCHPACK_POLLING}
+    networks:
+      - backend_frontend
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -47,6 +53,9 @@ services:
       test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "${DB_USER}", "-P", "${DB_PASSWORD}", "-N", "-C", "-Q", "SELECT 1"]
       interval: 10s
       retries: 10
+    networks:
+      - mssql
+      - mssql_backend
 
   mssql-init:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -59,6 +68,8 @@ services:
       /bin/bash -c "
       /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql
       "
+    networks:
+      - mssql
 
   infisical:
     container_name: infisical-backend
@@ -117,3 +128,7 @@ volumes:
 
 networks:
   infisical:
+  mssql_backend:
+  backend_frontend:
+  infisical_backend:
+  mssql:
