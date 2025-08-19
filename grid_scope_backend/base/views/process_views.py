@@ -7,13 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.db import transaction
 import pandas as pd
-from openpyxl.utils import range_boundaries
 import requests
-import io
 from django.db import connection
-from psycopg2 import sql
-from infisical_sdk import InfisicalSDKClient
-import os
+import json
+from google.oauth2.service_account import Credentials
+import gspread
+from gspread.utils import a1_to_rowcol, rowcol_to_a1
 # Create your views here.
 
 @api_view(['GET'])
@@ -238,34 +237,30 @@ def editProcess(request, pk):
 
 
 
-def read_google_sheet(sheet_url, cell_range, is_public):
+def read_google_sheet(sheet_url, cell_range, key):
     try:
         spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
-        gid = sheet_url.split("gid=")[1] if "gid=" in sheet_url else "0"
-        print(f"📄 Preparing to read Google Sheet {spreadsheet_id} (gid={gid})")
+        print(f"📄 Preparing to read Google Sheet {spreadsheet_id}")
 
-        if is_public:
-            export_url = (
-                f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export"
-                f"?format=xlsx&id={spreadsheet_id}&gid={gid}"
-            )
-            response = requests.get(export_url)
-            response.raise_for_status()
+        creds_dict = json.loads(key)
+        creds = Credentials.from_service_account_info(
+            creds_dict,
+            scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+        )
 
-            file_bytes = io.BytesIO(response.content)
-            df_full = pd.read_excel(file_bytes, sheet_name=0, header=None)
+        client = gspread.authorize(creds)
+        sheet = client.open_by_key(spreadsheet_id)
+        worksheet = sheet.get_worksheet(0)
 
-            min_col, min_row, max_col, max_row = range_boundaries(cell_range)
-            df_range = df_full.iloc[min_row-1:max_row, min_col-1:max_col]
+        data = worksheet.get(cell_range)
 
-            df_range.columns = df_range.iloc[0]
-            df_range = df_range[1:].reset_index(drop=True)
+        df = pd.DataFrame(data)
+        if not df.empty:
+            df.columns = df.iloc[0]
+            df = df[1:].reset_index(drop=True)
 
-            return df_range
+        return df
 
-        else:
-            print("⚠️ Sheet is private. Skipping actual download.")
-            return None
 
     except requests.exceptions.HTTPError as e:
         print(f"❌ HTTP error while downloading sheet: {e}")
@@ -273,6 +268,49 @@ def read_google_sheet(sheet_url, cell_range, is_public):
     except Exception as e:
         print(f"❌ Unexpected error while reading Google Sheet: {e}")
         return None
+
+
+def write_google_sheet(sheet_url, data_cell, key, data):
+    """
+    Writes data (list of dicts or DataFrame) to a Google Sheet starting from data_cell (e.g., 'A1').
+    """
+    try:
+        # Prepare credentials
+        creds_dict = json.loads(key)
+        creds = Credentials.from_service_account_info(
+            creds_dict,
+            scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        )
+        client = gspread.authorize(creds)
+
+        # Open sheet
+        spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
+        sheet = client.open_by_key(spreadsheet_id)
+        worksheet = sheet.get_worksheet(0)
+
+        # Convert data to DataFrame if needed
+        if isinstance(data, list):
+            df = pd.DataFrame(data)
+        else:
+            df = data.copy()
+
+        # Prepare values
+        values = [list(df.columns)] + df.values.tolist()
+
+        # Start coordinates
+        start_row, start_col = a1_to_rowcol(data_cell)
+        end_row = start_row + len(values) - 1
+        end_col = start_col + len(values[0]) - 1
+
+        # Compute A1 range
+        range_a1 = f"{rowcol_to_a1(start_row, start_col)}:{rowcol_to_a1(end_row, end_col)}"
+
+        # Update values
+        worksheet.update(range_a1, values)
+
+    except Exception as e:
+        print(f"❌ Error writing to Google Sheet: {e}")
+        raise
 
 
 def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
@@ -286,7 +324,7 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
                     df_range = read_google_sheet(
                         spreadsheet_in.spreadsheet.url,
                         spreadsheet_in.data_cell_range,
-                        spreadsheet_in.spreadsheet.is_public
+                        spreadsheet_in.spreadsheet.key.key,
                     )                  
                     if df_range is None or df_range.empty:
                         errors.append(f"Failed to read sheet for label '{in_label}'")
@@ -320,15 +358,22 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
                 except Exception as e:
                     errors.append(f"SQL execution failed: {str(e)}")
             
+            if results["sql_output"]:
+                sql_data = [dict(zip(results["sql_output"]["columns"], row)) for row in results["sql_output"]["rows"]]
+            else:
+                sql_data = []
 
             for out_label in spreadsheet_out_labels:
                 try:
                     spreadsheet_out = SpreadsheetOut.objects.get(label=out_label)
-                    results["out_sheets"][out_label] = {
-                        "url": spreadsheet_out.spreadsheet.url,
-                        "data_cell": spreadsheet_out.data_cell,
-                        "is_public": spreadsheet_out.spreadsheet.is_public
-                    }
+                    
+                    write_google_sheet(
+                        spreadsheet_out.spreadsheet.url,
+                        spreadsheet_out.data_cell,
+                        spreadsheet_out.spreadsheet.key.key,
+                        data=sql_data
+                    )
+
                 except SpreadsheetOut.DoesNotExist:
                     errors.append(f"No SpreadsheetOut found for label '{out_label}'")
                 except Exception as e:
@@ -343,8 +388,6 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def testProcess(request):
-    client = InfisicalSDKClient(host=os.environ.get("SITE_URL"),token=os.environ.get("INFISICAL_CLIENT_TOKEN"))
-
     data = request.data
 
     spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])

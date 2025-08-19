@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 # Create your models here.
 
 # Helper function to convert Excel column letters (e.g., 'AB') to a number (e.g., 28)
@@ -53,7 +54,7 @@ def validate_excel_cell(value):
 
 
 class Key(models.Model):
-    key = models.CharField(unique=False,max_length=100, null=False, blank=False)
+    key = EncryptedCharField(unique=False,max_length=100, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="keys_created") 

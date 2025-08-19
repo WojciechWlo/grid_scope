@@ -83,21 +83,23 @@ def editKey(request, pk):
     except Key.DoesNotExist:
         return Response({"detail": "Key not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    if label and key_value:
+    if label:
         if Key.objects.filter(label=label).exclude(id=pk).exists():
             return Response(
                 {"detail": "Key could not be edited. Label already exists."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        key_obj.key = key_value
+
+        if key_value:
+            key_obj.key = key_value
         key_obj.label = label
         key_obj.updating_user = user
         key_obj.save()
 
         return Response({"detail": "Key has been edited"}, status=status.HTTP_200_OK)
 
-    return Response({"detail": "Label and Key are required."}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"detail": "Label is required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])
