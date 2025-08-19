@@ -54,7 +54,7 @@ def validate_excel_cell(value):
 
 
 class Key(models.Model):
-    key = EncryptedCharField(unique=False,max_length=100, null=False, blank=False)
+    key = EncryptedCharField(unique=False,max_length=1000, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="keys_created") 

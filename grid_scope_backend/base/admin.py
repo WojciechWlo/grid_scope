@@ -1,7 +1,10 @@
 from django.contrib import admin
 from .models import *
 # Register your models here.
-admin.site.register(Key)
+class KeyAdmin(admin.ModelAdmin):
+    exclude = ('key',)
+    
+admin.site.register(Key, KeyAdmin)
 admin.site.register(Spreadsheet)
 admin.site.register(SpreadsheetIn)
 admin.site.register(SpreadsheetOut)
