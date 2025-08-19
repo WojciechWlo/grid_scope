@@ -7,6 +7,7 @@ import {
     ProcessState,
     ProcessEditState,
     ProcessTestState,
+    ProcessRunState,
 } from '../interfaces/processInterfaces';
 
 const initialListState: ProcessListState = {};
@@ -238,3 +239,40 @@ export const {
 } = processTestSlice.actions;
 
 export const processTestReducer = processTestSlice.reducer;
+
+const initialRunState: ProcessRunState = {};
+
+const processRunSlice = createSlice({
+    name: 'processRun',
+    initialState: initialRunState,
+    reducers: {
+        processRunRequest(state) {
+            state.loading = true;
+            state.error = undefined;
+        },
+        processRunSuccess(state, action: PayloadAction<any>) {
+            state.loading = false;
+            state.response = action.payload;
+            state.error = undefined;
+        },
+        processRunFail(state, action: PayloadAction<string[]>) {
+            state.loading = false;
+            state.error = action.payload;
+            state.response = undefined;
+        },
+        processRunReset(state){
+            state.loading = false;
+            state.error = undefined;
+            state.response = undefined;		
+        }
+    },
+});
+
+export const {
+    processRunRequest,
+    processRunSuccess,
+    processRunFail,
+    processRunReset,
+} = processRunSlice.actions;
+
+export const processRunReducer = processRunSlice.reducer;

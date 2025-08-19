@@ -14,7 +14,7 @@ import { keyCreateReset, keyEditReset, keyGetReset, keyListReset } from '../redu
 import { spreadsheetCreateReset, spreadsheetEditReset, spreadsheetGetReset, spreadsheetListReset} from '../reducers/spreadsheetReducers';
 import { spreadsheetInCreateReset, spreadsheetInEditReset, spreadsheetInGetReset, spreadsheetInListReset} from '../reducers/spreadsheetInReducers';
 import { spreadsheetOutCreateReset, spreadsheetOutEditReset, spreadsheetOutGetReset, spreadsheetOutListReset } from '../reducers/spreadsheetOutReducers';
-import { processCreateReset, processEditReset, processGetReset, processListReset, processTestReset } from '../reducers/processReducers';
+import { processCreateReset, processEditReset, processGetReset, processListReset, processRunReset, processTestReset } from '../reducers/processReducers';
 
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
@@ -71,7 +71,7 @@ export const logout = () => (dispatch: AppDispatch) => {
     dispatch(processEditReset())
     dispatch(processGetReset())
     dispatch(processTestReset())
-    dispatch(processTestReset())
+    dispatch(processRunReset())
 };
 
 export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>RootState) => {

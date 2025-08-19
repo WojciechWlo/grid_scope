@@ -9,18 +9,18 @@ from rest_framework_simplejwt.exceptions import TokenError
 # Create your views here.
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
+        username:str = request.data.get("username")
+        password:str = request.data.get("password")
 
         if not username or not password:
-            return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
+            response = Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+            return response
         user = authenticate(username=username, password=password)
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
 
-            return Response({
+            response = Response({
                 "user": {
                     "id": user.id,
                     "username": user.username,
@@ -33,30 +33,32 @@ class LoginView(APIView):
                     "access": str(refresh.access_token),
                 }
             }, status=status.HTTP_200_OK)
+            return response
         else:
-            return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-        
+            response = Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+            return response
 
 class TokensRefresh(APIView):
     def post(self, request):
-        refresh_token = request.data.get("refresh")
+        refresh_token:str = request.data.get("refresh")
 
         if not refresh_token:
-            return Response({"detail": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
-
+            response = Response({"detail": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return response
         try:
-            refresh = RefreshToken(refresh_token)
+            refresh:str = RefreshToken(refresh_token)
 
-            user_id = refresh.get("user_id")
+            user_id:str = refresh.get("user_id")
             try:
                 user = User.objects.get(id=user_id)
             except User.DoesNotExist:
-                return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-
+                response = Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+                return response
+            
             new_refresh = RefreshToken.for_user(user)
             new_access = new_refresh.access_token
 
-            return Response({
+            response = Response({
                 "user": {
                     "id": user.id,
                     "username": user.username,
@@ -69,6 +71,8 @@ class TokensRefresh(APIView):
                     "access": str(new_access),
                 }
             }, status=status.HTTP_200_OK)
-
+            return response
+        
         except TokenError:
-            return Response({"detail": "Invalid or expired refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({"detail": "Invalid or expired refresh token."}, status=status.HTTP_401_UNAUTHORIZED)
+            return response

@@ -8,7 +8,7 @@ import { deleteKey, listKeys } from '../actions/keyActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
-import { deleteProcess, listProcesses } from '../actions/processActions'
+import { deleteProcess, listProcesses, runProcess } from '../actions/processActions'
 
 type Process={
     id: number,
@@ -30,6 +30,9 @@ function ProcessListScreen() {
     const processDelete = useSelector((state: RootState)=>state.processDelete)
     const {loading:loadingDelete, error:errorDelete, response:responseDelete} = processDelete
 
+    const processRun = useSelector((state: RootState)=>state.processRun)
+    const {loading:loadingRun, error:errorRun, response:responseRun} = processRun
+
     let keyword = location.search
 
     useEffect(()=>{
@@ -42,7 +45,7 @@ function ProcessListScreen() {
 	const addProcessHandler = ()=>{
         navigate("/addprocess")
 	}
-	const editProcessHandler = (id:number)=>{
+	const editProcessHandler = (id:string)=>{
         navigate(`/editProcess/${id}`)
 	}
 	const deleteProcessHandler = (id:string)=>{
@@ -50,6 +53,9 @@ function ProcessListScreen() {
             dispatch(deleteProcess(id))
         }
 	}
+	const runProcessHandler = (id:string)=>{
+        dispatch(runProcess(id))
+	}    
     return (
 
         <div>
@@ -82,7 +88,16 @@ function ProcessListScreen() {
                                         <td>{process.id}</td>
                                         <td>{process.label}</td>
                                         <td>
-                                            <Button variant='light' className='btn-sm' onClick={()=>editProcessHandler(process.id)}>
+                                            { loadingRun ? 
+                                                <Button variant='primary' className='btn-sm'>
+                                                    <i className="fas fa-spinner"></i>
+                                                </Button>  :                                            
+                                                <Button variant='success' className='btn-sm' onClick={()=> runProcessHandler (""+process.id)}>
+                                                    <i className='fas fa-play'></i>
+                                                </Button>    
+                                            }
+                                            
+                                            <Button variant='light' className='btn-sm' onClick={()=>editProcessHandler(""+process.id)}>
                                                 <i className='fas fa-edit'></i>
                                             </Button>
 

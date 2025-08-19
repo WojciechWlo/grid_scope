@@ -3,9 +3,11 @@ from base.views import process_views as views
 
 
 urlpatterns = [
-    path('create/',views.createProcess, name="process-create"),
     path('', views.getProcesses, name="process-list" ),
-    path('test/',views.testProcess, name="process-test"),
+    path('create/',views.createProcess, name="process-create"),
+    path('test/',views.testProcess, name="process-test"),    
+    path('run/<str:pk>/',views.runProcess, name="process-run"),
+
     path('edit/<str:pk>/',views.editProcess, name="process-edit"),    
     path('delete/<str:pk>/', views.deleteProcess, name="process-delete"),   
     path('<str:pk>/',views.getProcess, name="process"), 

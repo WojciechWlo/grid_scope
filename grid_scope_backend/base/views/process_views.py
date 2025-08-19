@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from base.models import Process, ProcessSpreadsheetIn, ProcessSpreadsheetOut, SpreadsheetIn, SpreadsheetOut
+from base.models import Process, SpreadsheetIn, SpreadsheetOut, ProcessSpreadsheetIn, ProcessSpreadsheetOut
 from base.serializers import ProcessSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -13,6 +13,9 @@ import json
 from google.oauth2.service_account import Credentials
 import gspread
 from gspread.utils import a1_to_rowcol, rowcol_to_a1
+
+
+
 # Create your views here.
 
 @api_view(['GET'])
@@ -21,13 +24,13 @@ def getProcesses(request):
 
     process = Process.objects.all()
 
-    page = request.query_params.get('page')
+    page:str = request.query_params.get('page')
 
     if page == None:
         page = 1
 
     page = int(page)
-    pages = 1
+    pages: int = 1
 
     if page > 0:
         paginator = Paginator(process, 10)
@@ -43,35 +46,34 @@ def getProcesses(request):
         pages = paginator.num_pages
 
     serializer = ProcessSerializer(process, many=True)
-    return Response({'processes':serializer.data, 'page':page, 'pages':pages})
+    response = Response({'processes':serializer.data, 'page':page, 'pages':pages})
+    return response 
 
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteProcess(request, pk):
-    process = Process.objects.get(id = pk)
+    process: int = Process.objects.get(id = pk)
     process.delete()
-    return Response('Process deleted')
+    response = Response('Process deleted')
+    return response
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProcess(request, pk):
     try:
-        process = Process.objects.get(id=pk)
+        process: int = Process.objects.get(id=pk)
     except Process.DoesNotExist:
-        return Response({"detail": "Process not found."}, status=status.HTTP_404_NOT_FOUND)
+        response = Response({"detail": "Process not found."}, status=status.HTTP_404_NOT_FOUND)
+        return response
     
     serializer = ProcessSerializer(process)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    response = Response(serializer.data, status=status.HTTP_200_OK)
+    return response
 
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from django.db import transaction
-from base.models import Process, SpreadsheetIn, SpreadsheetOut, ProcessSpreadsheetIn, ProcessSpreadsheetOut
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -79,35 +81,35 @@ def createProcess(request):
     user = request.user
     data = request.data
 
-    label = data.get("label")
-    query = data.get("query")
+    label: str = data.get("label")
+    query: str = data.get("query")
     spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])
     spreadsheet_out_labels = data.get("spreadsheet_out_labels", [])
 
     if not label or not query:
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Missing label or query."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        return response   
     if not spreadsheet_in_labels or any(not l.strip() for l in spreadsheet_in_labels):
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Missing or empty Input Spreadsheet labels."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        return response   
     if not spreadsheet_out_labels or any(not l.strip() for l in spreadsheet_out_labels):
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Missing or empty Output Spreadsheet labels."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        response = response   
     if Process.objects.filter(label=label).exists():
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Label already exists."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        return response   
     try:
         with transaction.atomic():
             process = Process.objects.create(
@@ -132,23 +134,28 @@ def createProcess(request):
                 )
 
     except SpreadsheetIn.DoesNotExist:
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Input Spreadsheet not found."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response   
+     
     except SpreadsheetOut.DoesNotExist:
-        return Response(
+        response = Response(
             {"detail": "Process could not be created. Output SpreadsheetOut not found."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response   
+    
     except Exception as e:
-        return Response(
+        response = Response(
             {"detail": f"Process could not be created. Error: {str(e)}"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+        return response
 
-    return Response({"detail": "Process has been created"}, status=status.HTTP_201_CREATED)
-
+    response = Response({"detail": "Process has been created"}, status=status.HTTP_201_CREATED)
+    return response
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -156,43 +163,48 @@ def editProcess(request, pk):
     user = request.user
     data = request.data
 
-    label = data.get("label")
-    query = data.get("query")
-    spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])
-    spreadsheet_out_labels = data.get("spreadsheet_out_labels", [])
+    label: str = data.get("label")
+    query: str = data.get("query")
+    spreadsheet_in_labels: list = data.get("spreadsheet_in_labels", [])
+    spreadsheet_out_labels: list = data.get("spreadsheet_out_labels", [])
 
     try:
         process = Process.objects.get(pk=pk)
     except Process.DoesNotExist:
-        return Response(
+        response = Response(
             {"detail": "Process not found."},
             status=status.HTTP_404_NOT_FOUND
         )
+        return response
 
     if not label or not query:
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Missing label or query."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response
 
     if not spreadsheet_in_labels or any(not l.strip() for l in spreadsheet_in_labels):
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Missing or empty Input Spreadsheet labels."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        return response
+    
     if not spreadsheet_out_labels or any(not l.strip() for l in spreadsheet_out_labels):
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Missing or empty Output Spreadsheet labels."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response
 
     if Process.objects.exclude(pk=pk).filter(label=label).exists():
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Label already exists."},
             status=status.HTTP_400_BAD_REQUEST
         )
-
+        return response
+    
     try:
         with transaction.atomic():
             process.label = label
@@ -218,26 +230,31 @@ def editProcess(request, pk):
                 )
 
     except SpreadsheetIn.DoesNotExist:
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Input Spreadsheet not found."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response
+    
     except SpreadsheetOut.DoesNotExist:
-        return Response(
+        response = Response(
             {"detail": "Process could not be updated. Output Spreadsheet not found."},
             status=status.HTTP_400_BAD_REQUEST
         )
+        return response
+    
     except Exception as e:
-        return Response(
+        response = Response(
             {"detail": f"Process could not be updated. Error: {str(e)}"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+        return response
+    
+    response = Response({"detail": "Process has been updated"}, status=status.HTTP_200_OK)
+    return response
 
-    return Response({"detail": "Process has been updated"}, status=status.HTTP_200_OK)
 
-
-
-def read_google_sheet(sheet_url, cell_range, key):
+def read_google_sheet(sheet_url: str, cell_range:str, key: dict):
     try:
         spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
         print(f"📄 Preparing to read Google Sheet {spreadsheet_id}")
@@ -270,42 +287,33 @@ def read_google_sheet(sheet_url, cell_range, key):
         return None
 
 
-def write_google_sheet(sheet_url, data_cell, key, data):
-    """
-    Writes data (list of dicts or DataFrame) to a Google Sheet starting from data_cell (e.g., 'A1').
-    """
+def write_google_sheet(sheet_url: str, data_cell:str, key: dict, data: list):
+
     try:
-        # Prepare credentials
-        creds_dict = json.loads(key)
+        creds_dict: dict = json.loads(key)
         creds = Credentials.from_service_account_info(
             creds_dict,
             scopes=["https://www.googleapis.com/auth/spreadsheets"]
         )
         client = gspread.authorize(creds)
 
-        # Open sheet
         spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
         sheet = client.open_by_key(spreadsheet_id)
         worksheet = sheet.get_worksheet(0)
 
-        # Convert data to DataFrame if needed
         if isinstance(data, list):
             df = pd.DataFrame(data)
         else:
             df = data.copy()
 
-        # Prepare values
         values = [list(df.columns)] + df.values.tolist()
 
-        # Start coordinates
         start_row, start_col = a1_to_rowcol(data_cell)
         end_row = start_row + len(values) - 1
         end_col = start_col + len(values[0]) - 1
 
-        # Compute A1 range
         range_a1 = f"{rowcol_to_a1(start_row, start_col)}:{rowcol_to_a1(end_row, end_col)}"
 
-        # Update values
         worksheet.update(range_a1, values)
 
     except Exception as e:
@@ -313,7 +321,7 @@ def write_google_sheet(sheet_url, data_cell, key, data):
         raise
 
 
-def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
+def executeProcess(spreadsheet_in_labels: list, spreadsheet_out_labels: list, process_sql: str):
     results = {"in_sheets": {}, "out_sheets": {}, "sql_output": None}
     errors = []
     try:
@@ -330,8 +338,8 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
                         errors.append(f"Failed to read sheet for label '{in_label}'")
                         continue
 
-                    col_names = list(df_range.columns)
-                    table_name = f"{in_label}"
+                    col_names: list = list(df_range.columns)
+                    table_name: str = f"{in_label}"
 
                     create_temp_table_from_dataframe(table_name, col_names, df_range)
 
@@ -347,8 +355,8 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
                 try:
                     cursor.execute(process_sql)
                     if cursor.description:
-                        columns = [col[0] for col in cursor.description]
-                        rows = cursor.fetchall()
+                        columns: list = [col[0] for col in cursor.description]
+                        rows:list = cursor.fetchall()
                         results["sql_output"] = {
                             "columns": columns,
                             "rows": rows
@@ -357,11 +365,11 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
                         results["sql_output"] = None
                 except Exception as e:
                     errors.append(f"SQL execution failed: {str(e)}")
-            
+
             if results["sql_output"]:
-                sql_data = [dict(zip(results["sql_output"]["columns"], row)) for row in results["sql_output"]["rows"]]
+                sql_data: list = [dict(zip(results["sql_output"]["columns"], row)) for row in results["sql_output"]["rows"]]
             else:
-                sql_data = []
+                sql_data: list = []
 
             for out_label in spreadsheet_out_labels:
                 try:
@@ -383,33 +391,49 @@ def executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql):
         errors.append(f"DB transaction error: {str(e)}")
 
     status_code = status.HTTP_200_OK if not errors else status.HTTP_400_BAD_REQUEST
-    return Response({"results": results, "details": errors}, status=status_code)
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def testProcess(request):
-    data = request.data
-
-    spreadsheet_in_labels = data.get("spreadsheet_in_labels", [])
-    spreadsheet_out_labels = data.get("spreadsheet_out_labels", [])
-    process_sql = data.get("query")
-
-    return executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, process_sql)
+    response = Response({"results": results, "details": errors}, status=status_code)
+    return response
 
 
 def create_temp_table_from_dataframe(table_name: str, col_names: list, df: pd.DataFrame):
     if df.empty:
         return
 
-    temp_table_name = f"#{table_name}"
+    temp_table_name: str = f"#{table_name}"
 
-    create_sql_str = f"CREATE TABLE {temp_table_name} ({', '.join(c + ' NVARCHAR(MAX)' for c in col_names)});"
-    insert_sql_str = f"INSERT INTO {temp_table_name} ({', '.join(col_names)}) VALUES ({', '.join(['%s']*len(col_names))})"
+    create_sql_str: str = f"CREATE TABLE {temp_table_name} ({', '.join(c + ' NVARCHAR(MAX)' for c in col_names)});"
+    insert_sql_str: str = f"INSERT INTO {temp_table_name} ({', '.join(col_names)}) VALUES ({', '.join(['%s']*len(col_names))})"
 
-    insert_values = [tuple(x) for x in df[col_names].astype(str).values.tolist()]
+    insert_values: list = [tuple(x) for x in df[col_names].astype(str).values.tolist()]
 
 
     with connection.cursor() as cursor:
         cursor.execute(create_sql_str)
         cursor.executemany(insert_sql_str, [tuple(x) for x in insert_values])
         cursor.commit()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def testProcess(request):
+    data = request.data
+
+    spreadsheet_in_labels: str = data.get("spreadsheet_in_labels", [])
+    query: str = data.get("query")
+
+    return executeProcess(spreadsheet_in_labels, [], query)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def runProcess(request, pk):
+
+    process = Process.objects.get(id=pk)
+    query: str = process.query
+    spreadsheets_in: list = ProcessSpreadsheetIn.objects.filter(process=pk)
+    spreadsheets_out: list = ProcessSpreadsheetOut.objects.filter(process=pk)
+
+    spreadsheet_in_labels = [spreadsheet_in.spreadsheet_in.label for spreadsheet_in in spreadsheets_in]
+    spreadsheet_out_labels = [spreadsheet_out.spreadsheet_out.label for spreadsheet_out in spreadsheets_out]
+
+    return executeProcess(spreadsheet_in_labels, spreadsheet_out_labels, query)

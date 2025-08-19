@@ -37,3 +37,9 @@ export interface ProcessTestState {
     response?: any;
     error?: string[];
 }
+
+export interface ProcessRunState {
+    loading?: boolean;
+    response?: any;
+    error?: string[];
+}

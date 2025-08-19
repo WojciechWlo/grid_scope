@@ -123,7 +123,7 @@ function FormProcessScreen() {
 		dispatch(testProcess({
 			label,
 			spreadsheet_in_labels:spreadsheetInLabels,
-			spreadsheet_out_labels:spreadsheetOutLabels,
+			spreadsheet_out_labels:[],
 			query,
 		}))
 	}

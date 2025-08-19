@@ -40,16 +40,17 @@ import{
 	processEditReducer,
 	processGetReducer,
 	processTestReducer,
+	processRunReducer,
 }from './reducers/processReducers';
 
 function loadAuthTokens(): any | null {
 	const item = localStorage.getItem('authTokens');
 	if (!item) return null;
-	try {
-		return JSON.parse(item) as any;
-	} catch {
-		return null;
-	}
+		try {
+			return JSON.parse(item) as any;
+		} catch {
+			return null;
+		}
 	}
 
 const authTokensFromStorage = loadAuthTokens();
@@ -83,6 +84,7 @@ const rootReducer = combineReducers({
 	processEdit : processEditReducer,
 	processGet : processGetReducer,	
 	processTest : processTestReducer,
+	processRun : processRunReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
