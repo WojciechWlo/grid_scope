@@ -34,7 +34,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
       - WATCHPACK_POLLING=${WATCHPACK_POLLING}
-      - BACKEND_ADDRESS=${BACKEND_ADDRESS}
+      - REACT_APP_BACKEND_ADDRESS=${BACKEND_ADDRESS}
     networks:
       - backend_frontend
 
