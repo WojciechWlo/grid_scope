@@ -35,7 +35,7 @@ export const listSpreadsheets = (keyword='') => async (dispatch: AppDispatch, ge
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/${keyword}`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/spreadsheets/${keyword}`,
             config
         );
 
@@ -73,7 +73,7 @@ export const createSpreadsheet = (spreadsheetCreate: SpreadsheetType) => async (
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/spreadsheets/create/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/spreadsheets/create/`,
             spreadsheetCreate,
             config
         );
@@ -106,7 +106,7 @@ export const deleteSpreadsheet = (id: string) => async (dispatch: AppDispatch, g
         }
 
         const{data} = await axios.delete(
-            `http://127.0.0.1:8000/api/spreadsheets/delete/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/spreadsheets/delete/${id}/`,
             config
         )
 
@@ -139,7 +139,7 @@ export const getSpreadsheet = (id: string) => async (dispatch: AppDispatch, getS
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/spreadsheets/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/spreadsheets/${id}/`,
             config
         );
 
@@ -171,7 +171,7 @@ export const editSpreadsheet = (spreadsheetEdit: SpreadsheetType, id: string) =>
         };
 
         const { data } = await axios.put(
-            `http://127.0.0.1:8000/api/spreadsheets/edit/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/spreadsheets/edit/${id}/`,
             spreadsheetEdit,
             config
         );
