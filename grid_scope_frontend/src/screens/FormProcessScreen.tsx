@@ -224,7 +224,7 @@ function FormProcessScreen() {
 						value={query}
 						onChange={(newValue: string) => setQuery(newValue)}
 						width="100%"
-						height="150px"
+						height="300px"
 						fontSize={14}
 						showPrintMargin={false}
 						showGutter={true}

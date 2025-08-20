@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
-from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
+from encrypted_model_fields.fields import EncryptedCharField
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 # Helper function to convert Excel column letters (e.g., 'AB') to a number (e.g., 28)
@@ -68,7 +69,6 @@ class Spreadsheet(models.Model):
     key = models.ForeignKey(Key, on_delete=models.CASCADE, null=False, blank=False)
     label = models.CharField(max_length=100, unique=True, null=False, blank=False)
     url = models.URLField(max_length=100,null=False, blank=False)
-    is_public = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheets_created") 
     updated_at = models.DateTimeField(auto_now=True)
@@ -85,6 +85,7 @@ class SpreadsheetIn(models.Model):
         validators=[validate_excel_range],
         help_text="Enter a valid Excel range, e.g., A1:XFD1048576"
     )
+    worksheet_id = models.IntegerField(null=False, blank=False,validators=[MinValueValidator(0)])    
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheetsin_created") 
     updated_at = models.DateTimeField(auto_now=True)
@@ -101,6 +102,7 @@ class SpreadsheetOut(models.Model):
         validators=[validate_excel_cell],
         help_text="Enter a valid Excel cell, e.g., B12"
     )
+    worksheet_id = models.IntegerField(null=False, blank=False,validators=[MinValueValidator(0)])
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="spreadsheetsout_created") 
     updated_at = models.DateTimeField(auto_now=True)

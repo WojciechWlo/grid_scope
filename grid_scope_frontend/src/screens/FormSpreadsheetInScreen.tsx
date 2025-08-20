@@ -27,6 +27,7 @@ function FormSpreadsheetInScreen() {
 	const [label, setLabel] = useState('')
 	const [spreadsheetLabel, setSpreadsheetLabel] = useState('')
 	const [dataCellRange, setDataCellRange] = useState('')
+	const [worksheetId, setWorksheetId] = useState(0)
 
     const dispatch = useDispatch<AppDispatch>()
 	type OptionType = { value: string; label: string };
@@ -59,6 +60,7 @@ function FormSpreadsheetInScreen() {
 			setLabel(spreadsheetInResponse.label);
 			setSpreadsheetLabel(spreadsheetInResponse.spreadsheet);
 			setDataCellRange(spreadsheetInResponse.data_cell_range);
+            setWorksheetId(spreadsheetInResponse.worksheet_id);			
 		}
 	}, [spreadsheetInResponse, isEdit]);
 
@@ -86,12 +88,14 @@ function FormSpreadsheetInScreen() {
 				label,
 				spreadsheet_label:spreadsheetLabel,
 				data_cell_range: dataCellRange,
+				worksheet_id: worksheetId,
 			},params.id))
 		}else{
 			dispatch(createSpreadsheetIn({
 				label,
 				spreadsheet_label:spreadsheetLabel,
 				data_cell_range: dataCellRange,
+				worksheet_id: worksheetId,
 			}))
 		}
 
@@ -147,6 +151,15 @@ function FormSpreadsheetInScreen() {
 						Data Cell Range
 					</Form.Label>
 					<Form.Control type='text' placeholder='Enter Data Cell Range' value={dataCellRange} onChange={(e)=>setDataCellRange(e.target.value)}>
+
+					</Form.Control>
+				</Form.Group>
+
+				<Form.Group controlId='label'>
+					<Form.Label>
+						Worksheet Id
+					</Form.Label>
+					<Form.Control type='number' placeholder='Enter Worksheet Id' value={worksheetId} onChange={(e)=>setWorksheetId(Number(e.target.value))}>
 
 					</Form.Control>
 				</Form.Group>

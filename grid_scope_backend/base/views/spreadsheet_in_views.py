@@ -50,10 +50,11 @@ def createSpreadsheetIn(request):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell_range: str = data.get('data_cell_range')
+    worksheet_id: int = data.get('worksheet_id')
 
-    if not label or not spreadsheet_label or not data_cell_range:
+    if not label or not spreadsheet_label or not data_cell_range or worksheet_id==None:
         response = Response(
-            {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label or data cell range."},
+            {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label, data cell range or worksheet id."},
             status=status.HTTP_400_BAD_REQUEST
         )
         return response
@@ -97,6 +98,7 @@ def createSpreadsheetIn(request):
         updating_user=user,
         spreadsheet=spreadsheet_instance,
         data_cell_range=data_cell_range,
+        worksheet_id=worksheet_id
     )
 
     response = Response({"detail": "Input Spreadsheet has been created"})
@@ -112,6 +114,7 @@ def editSpreadsheetIn(request, pk):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell_range: str = data.get('data_cell_range')
+    worksheet_id: int = data.get('worksheet_id')
 
     try:
         spreadsheet_in = SpreadsheetIn.objects.get(pk=pk)
@@ -121,9 +124,10 @@ def editSpreadsheetIn(request, pk):
             status=status.HTTP_404_NOT_FOUND
         )
         return response
-    if not label or not spreadsheet_label or not data_cell_range:
+    
+    if not label or not spreadsheet_label or not data_cell_range or worksheet_id==None:
         response = Response(
-            {"detail": "Input Spreadsheet could not be updated. Missing label, spreadsheet label or data cell range."},
+            {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label, data cell range or worksheet id."},
             status=status.HTTP_400_BAD_REQUEST
         )
         return response
@@ -153,6 +157,7 @@ def editSpreadsheetIn(request, pk):
     spreadsheet_in.spreadsheet = spreadsheet_instance
     spreadsheet_in.data_cell_range = data_cell_range
     spreadsheet_in.updating_user = user
+    spreadsheet_in.worksheet_id = worksheet_id
     spreadsheet_in.save()
 
     response = Response({"detail": "Input Spreadsheet has been updated"})

@@ -51,7 +51,6 @@ def createSpreadsheet(request):
     label: str = data.get('label')
     url: str = data.get('url')
     key_label: str = data.get('key_label')
-    is_public: bool = data.get('is_public')
 
     if not label or not url:
         response = Response(
@@ -89,7 +88,6 @@ def createSpreadsheet(request):
         label=label,
         url=url,
         key=key_instance,
-        is_public=is_public
     )
 
     response = Response({"detail": "Spreadsheet has been created"})
@@ -105,7 +103,6 @@ def editSpreadsheet(request, pk):
     label: str = data.get('label')
     url: str = data.get('url')
     key_label: str = data.get('key_label')
-    is_public: bool = data.get('is_public')
 
     try:
         spreadsheet = Spreadsheet.objects.get(pk=pk)
@@ -146,7 +143,6 @@ def editSpreadsheet(request, pk):
     spreadsheet.label = label
     spreadsheet.url = url
     spreadsheet.key = key_instance
-    spreadsheet.is_public = is_public
     spreadsheet.updating_user = user
     spreadsheet.save()
 

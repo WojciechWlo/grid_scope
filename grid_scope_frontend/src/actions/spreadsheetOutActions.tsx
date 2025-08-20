@@ -51,6 +51,7 @@ type SpreadsheetOutType = {
     label: string;
     spreadsheet_label: string;
     data_cell: string;
+    worksheet_id: number,
 };
 
 export const createSpreadsheetOut = (spreadsheetOutCreate: SpreadsheetOutType) => async (dispatch: AppDispatch, getState: () => RootState) => {

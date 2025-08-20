@@ -28,6 +28,7 @@ function FormSpreadsheetOutScreen() {
     const [label, setLabel] = useState('');
     const [spreadsheetLabel, setSpreadsheetLabel] = useState('');
     const [dataCell, setDataCell] = useState('');
+    const [worksheetId, setWorksheetId] = useState(0)
 
     type OptionType = { value: string; label: string };
 
@@ -85,12 +86,14 @@ function FormSpreadsheetOutScreen() {
                 label,
                 spreadsheet_label:spreadsheetLabel,
                 data_cell: dataCell,
+                worksheet_id: worksheetId,
             },params.id))
         }else{
             dispatch(createSpreadsheetOut({
                 label,
                 spreadsheet_label:spreadsheetLabel,
                 data_cell: dataCell,
+                worksheet_id: worksheetId,
             }))
         }
     };
@@ -145,6 +148,15 @@ function FormSpreadsheetOutScreen() {
                         value={dataCell}
                         onChange={(e) => setDataCell(e.target.value)}
                     />
+                </Form.Group>
+
+                <Form.Group controlId='label'>
+                    <Form.Label>
+                        Worksheet Id
+                    </Form.Label>
+                    <Form.Control type='number' placeholder='Enter Worksheet Id' value={worksheetId} onChange={(e)=>setWorksheetId(Number(e.target.value))}>
+
+                    </Form.Control>
                 </Form.Group>
 
                 <br />

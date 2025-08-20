@@ -13,6 +13,7 @@ type SpreadsheetOut = {
     label: string;
     spreadsheet: string;
     data_cell: string;
+    worksheet_id: number,    
 };
 
 function SpreadsheetOutListScreen() {
@@ -74,6 +75,7 @@ function SpreadsheetOutListScreen() {
                                 <th>LABEL</th>
                                 <th>SPREADSHEET</th>
                                 <th>DATA CELL</th>
+                                <th>WORKSHEET ID</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -84,6 +86,7 @@ function SpreadsheetOutListScreen() {
                                     <td>{spreadsheetOut.label}</td>
                                     <td>{spreadsheetOut.spreadsheet}</td>
                                     <td>{spreadsheetOut.data_cell}</td>
+                                    <td>{spreadsheetOut.worksheet_id}</td>
                                     <td>
                                         <Button
                                             variant="light"

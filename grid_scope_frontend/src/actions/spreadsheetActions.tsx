@@ -55,7 +55,6 @@ type SpreadsheetType={
     label:string, 
     url:string, 
     key_label:string,
-    is_public: boolean
 }
 
 export const createSpreadsheet = (spreadsheetCreate: SpreadsheetType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {

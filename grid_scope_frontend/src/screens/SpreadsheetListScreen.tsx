@@ -77,7 +77,6 @@ function SpreadsheetListScreen() {
                                     <th>LABEL</th>
                                     <th>URL</th>
                                     <th>KEY</th>
-                                    <th>IS PUBLIC?</th>
                                     <th></th>
                                 </tr>
 
@@ -89,7 +88,6 @@ function SpreadsheetListScreen() {
                                         <td>{spreadsheet.label}</td>
                                         <td>{spreadsheet.url}</td>
                                         <td>{spreadsheet.key}</td>
-                                        <td>{spreadsheet.is_public? "True" : "False"}</td>
                                         <td>
                                             <Button variant='light' className='btn-sm' onClick={()=>editSpreadsheetHandler(spreadsheet.id)}>
                                                 <i className='fas fa-edit'></i>

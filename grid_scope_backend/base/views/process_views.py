@@ -254,7 +254,7 @@ def editProcess(request, pk):
     return response
 
 
-def read_google_sheet(sheet_url: str, cell_range:str, key: dict):
+def read_google_sheet(sheet_url: str, cell_range:str, worksheet_id, key: dict):
     try:
         spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
         print(f"📄 Preparing to read Google Sheet {spreadsheet_id}")
@@ -267,7 +267,7 @@ def read_google_sheet(sheet_url: str, cell_range:str, key: dict):
 
         client = gspread.authorize(creds)
         sheet = client.open_by_key(spreadsheet_id)
-        worksheet = sheet.get_worksheet(0)
+        worksheet = sheet.get_worksheet(worksheet_id)
 
         data = worksheet.get(cell_range)
 
@@ -287,7 +287,7 @@ def read_google_sheet(sheet_url: str, cell_range:str, key: dict):
         return None
 
 
-def write_google_sheet(sheet_url: str, data_cell:str, key: dict, data: list):
+def write_google_sheet(sheet_url: str, data_cell:str, worksheet_id: int, data: list, key: dict):
 
     try:
         creds_dict: dict = json.loads(key)
@@ -299,7 +299,7 @@ def write_google_sheet(sheet_url: str, data_cell:str, key: dict, data: list):
 
         spreadsheet_id = sheet_url.split("/d/")[1].split("/")[0]
         sheet = client.open_by_key(spreadsheet_id)
-        worksheet = sheet.get_worksheet(0)
+        worksheet = sheet.get_worksheet(worksheet_id)
 
         if isinstance(data, list):
             df = pd.DataFrame(data)
@@ -332,6 +332,7 @@ def executeProcess(spreadsheet_in_labels: list, spreadsheet_out_labels: list, pr
                     df_range = read_google_sheet(
                         spreadsheet_in.spreadsheet.url,
                         spreadsheet_in.data_cell_range,
+                        spreadsheet_in.worksheet_id,
                         spreadsheet_in.spreadsheet.key.key,
                     )                  
                     if df_range is None or df_range.empty:
@@ -378,8 +379,9 @@ def executeProcess(spreadsheet_in_labels: list, spreadsheet_out_labels: list, pr
                     write_google_sheet(
                         spreadsheet_out.spreadsheet.url,
                         spreadsheet_out.data_cell,
+                        spreadsheet_out.worksheet_id,     
+                        sql_data,
                         spreadsheet_out.spreadsheet.key.key,
-                        data=sql_data
                     )
 
                 except SpreadsheetOut.DoesNotExist:

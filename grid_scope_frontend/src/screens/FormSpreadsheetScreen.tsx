@@ -26,7 +26,6 @@ function FormSpreadsheetScreen() {
 	const [label, setLabel] = useState('')
 	const [url, setUrl] = useState('')
 	const [keyLabel, setKeyLabel] = useState('')
-	const [isPublic, setIsPublic] = useState(true)
 
     const dispatch = useDispatch<AppDispatch>()
 	type OptionType = { value: string; label: string };
@@ -60,7 +59,6 @@ function FormSpreadsheetScreen() {
 			setLabel(spreadsheetResponse.label);
 			setUrl(spreadsheetResponse.url);
 			setKeyLabel(spreadsheetResponse.key);
-			setIsPublic(spreadsheetResponse.is_public);
 		}
 	}, [spreadsheetResponse, isEdit]);
 
@@ -87,8 +85,7 @@ function FormSpreadsheetScreen() {
 			dispatch(editSpreadsheet({
 				label,
 				url,
-				key_label:keyLabel,
-				is_public:isPublic,				
+				key_label:keyLabel,			
 			}, params.id))
 
 		}else{
@@ -96,7 +93,6 @@ function FormSpreadsheetScreen() {
 				label,
 				url,
 				key_label:keyLabel,
-				is_public:isPublic,
 			}))
 		}
 	}
@@ -128,18 +124,6 @@ function FormSpreadsheetScreen() {
 					</Form.Control>
 				
 				</Form.Group>
-
-				<Form.Group controlId="isPublic">
-					<Form.Label>Is Public</Form.Label>
-					<Form.Check
-						type="checkbox"
-						checked={isPublic}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setIsPublic(e.target.checked)
-						}
-					/>
-				</Form.Group>
-
 
 				<Form.Group controlId="key">
 					<Form.Label>Key</Form.Label>
