@@ -41,7 +41,7 @@ export const listProcesses = (keyword='') => async (dispatch: AppDispatch, getSt
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/processes/${keyword}`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/${keyword}`,
             config
         );
 
@@ -74,7 +74,7 @@ export const deleteProcess = (id: string) => async (dispatch: AppDispatch, getSt
         }
 
         const{data} = await axios.delete(
-            `http://127.0.0.1:8000/api/processes/delete/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/delete/${id}/`,
             config
         )
 
@@ -113,7 +113,7 @@ export const editProcess = (processEdit: ProcessType, id: string) => async (disp
         };
 
         const { data } = await axios.put(
-            `http://127.0.0.1:8000/api/processes/edit/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/edit/${id}/`,
             processEdit,
             config
         );
@@ -146,7 +146,7 @@ export const createProcess = (processCreate: ProcessType) => async (dispatch: Ap
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/processes/create/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/create/`,
             processCreate,
             config
         );
@@ -179,7 +179,7 @@ export const getProcess = (id: string) => async (dispatch: AppDispatch, getState
         };
 
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/processes/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/${id}/`,
             config
         );
 
@@ -209,7 +209,7 @@ export const testProcess = (processTest: ProcessType) => async (dispatch: AppDis
         };
 
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/processes/test/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/test/`,
             processTest,
             config
         );
@@ -247,7 +247,7 @@ export const runProcess = (id: string) => async (dispatch: AppDispatch, getState
         };
         
         const { data } = await axios.get(
-            `http://127.0.0.1:8000/api/processes/run/${id}/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/processes/run/${id}/`,
             config
         );
 
