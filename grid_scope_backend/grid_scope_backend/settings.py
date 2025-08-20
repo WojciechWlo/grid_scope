@@ -154,7 +154,7 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    os.environ.get("FRONTEND_ADDRESS","http://localhost:3000"),
 ]
 
 FIELD_ENCRYPTION_KEY = os.environ.get("DJANGO_ENCRYPTION_KEY")

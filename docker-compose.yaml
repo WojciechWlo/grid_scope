@@ -17,6 +17,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - DJANGO_ENCRYPTION_KEY=${DJANGO_ENCRYPTION_KEY}
+      - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
     networks:
       - infisical_backend
       - backend_frontend
@@ -33,6 +34,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
       - WATCHPACK_POLLING=${WATCHPACK_POLLING}
+      - BACKEND_ADDRESS=${BACKEND_ADDRESS}
     networks:
       - backend_frontend
 

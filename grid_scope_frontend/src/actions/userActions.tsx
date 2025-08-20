@@ -88,7 +88,7 @@ export const refreshTokens = () => async (dispatch: AppDispatch, getState: ()=>R
             },
         };
         const { data } = await axios.post(
-            `http://127.0.0.1:8000/api/users/tokens/refresh/`,
+            process.env.REACT_APP_BACKEND_ADDRESS+`/api/users/tokens/refresh/`,
             {
                 refresh:authTokens.tokens.refresh,
             },
