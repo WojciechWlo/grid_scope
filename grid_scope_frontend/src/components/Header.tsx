@@ -28,30 +28,33 @@ return (
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ms-auto">
-						<Nav.Link as={NavLink} to="/keylist" className="nav-link">
-							<i className="fas fa-key"></i> Keys
-						</Nav.Link>
-
-						<Nav.Link as={NavLink} to="/spreadsheetlist" className="nav-link">
-							<i className="fas fa-table"></i> Spreadsheets
-						</Nav.Link>
-
-						<Nav.Link as={NavLink} to="/spreadsheetinlist" className="nav-link">
-							<i className="fas fa-file-import"></i> Inputs
-						</Nav.Link>
-
-						<Nav.Link as={NavLink} to="/spreadsheetoutlist" className="nav-link">
-							<i className="fas fa-file-export"></i> Outputs
-						</Nav.Link>
-
-						<Nav.Link as={NavLink} to="/processlist" className="nav-link">
-							<i className="fas fa-cogs"></i> Processes
-						</Nav.Link>
-
 						{userInfo ? (
-							<Nav.Link onClick={logoutHandler} className="nav-link">
-							<i className="fas fa-user" /> Logout
-							</Nav.Link>
+							<>
+								<Nav.Link as={NavLink} to="/keylist" className="nav-link">
+									<i className="fas fa-key"></i> Keys
+								</Nav.Link>
+
+								<Nav.Link as={NavLink} to="/spreadsheetlist" className="nav-link">
+									<i className="fas fa-table"></i> Spreadsheets
+								</Nav.Link>
+
+								<Nav.Link as={NavLink} to="/spreadsheetinlist" className="nav-link">
+									<i className="fas fa-file-import"></i> Inputs
+								</Nav.Link>
+
+								<Nav.Link as={NavLink} to="/spreadsheetoutlist" className="nav-link">
+									<i className="fas fa-file-export"></i> Outputs
+								</Nav.Link>
+
+								<Nav.Link as={NavLink} to="/processlist" className="nav-link">
+									<i className="fas fa-cogs"></i> Processes
+								</Nav.Link>
+
+								
+								<Nav.Link onClick={logoutHandler} className="nav-link">
+									<i className="fas fa-user" /> Logout
+								</Nav.Link>
+							</>
 						) : (
 							<Nav.Link as={NavLink} to="/login" end className="nav-link">
 							<i className="fas fa-user" /> Login

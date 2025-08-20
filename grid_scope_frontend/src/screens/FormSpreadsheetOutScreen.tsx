@@ -60,6 +60,7 @@ function FormSpreadsheetOutScreen() {
             setLabel(spreadsheetOutResponse.label);
             setSpreadsheetLabel(spreadsheetOutResponse.spreadsheet);
             setDataCell(spreadsheetOutResponse.data_cell);
+            setWorksheetId(spreadsheetOutResponse.worksheet_id);
         }
     }, [spreadsheetOutResponse, isEdit]);
 

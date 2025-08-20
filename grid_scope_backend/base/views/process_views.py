@@ -8,12 +8,11 @@ from rest_framework import status
 from django.db import transaction
 import pandas as pd
 import requests
-from django.db import connection
 import json
 from google.oauth2.service_account import Credentials
 import gspread
 from gspread.utils import a1_to_rowcol, rowcol_to_a1
-
+from django.db import connection, connections
 
 
 # Create your views here.
@@ -325,69 +324,69 @@ def executeProcess(spreadsheet_in_labels: list, spreadsheet_out_labels: list, pr
     results = {"in_sheets": {}, "out_sheets": {}, "sql_output": None}
     errors = []
     try:
-        with connection.cursor() as cursor:
-            for in_label in spreadsheet_in_labels:
-                try:
-                    spreadsheet_in = SpreadsheetIn.objects.get(label=in_label)
-                    df_range = read_google_sheet(
-                        spreadsheet_in.spreadsheet.url,
-                        spreadsheet_in.data_cell_range,
-                        spreadsheet_in.worksheet_id,
-                        spreadsheet_in.spreadsheet.key.key,
-                    )                  
-                    if df_range is None or df_range.empty:
-                        errors.append(f"Failed to read sheet for label '{in_label}'")
-                        continue
+        for in_label in spreadsheet_in_labels:
+            try:
+                spreadsheet_in = SpreadsheetIn.objects.get(label=in_label)
+                df_range = read_google_sheet(
+                    spreadsheet_in.spreadsheet.url,
+                    spreadsheet_in.data_cell_range,
+                    spreadsheet_in.worksheet_id,
+                    spreadsheet_in.spreadsheet.key.key,
+                )                  
+                if df_range is None or df_range.empty:
+                    errors.append(f"Failed to read sheet for label '{in_label}'")
+                    continue
 
-                    col_names: list = list(df_range.columns)
-                    table_name: str = f"{in_label}"
+                col_names: list = list(df_range.columns)
+                table_name: str = f"{in_label}"
 
-                    create_temp_table_from_dataframe(table_name, col_names, df_range)
+                create_temp_table_from_dataframe(table_name, col_names, df_range)
 
-                    results["in_sheets"][in_label] = df_range.to_dict(orient="records")
+                results["in_sheets"][in_label] = df_range.to_dict(orient="records")
 
-                except SpreadsheetIn.DoesNotExist:
-                    errors.append(f"No SpreadsheetIn found for label '{in_label}'")
-                except Exception as e:
-                    errors.append(f"Unexpected error for label '{in_label}': {str(e)}")
-            
-            
-            if process_sql:
-                try:
-                    cursor.execute(process_sql)
-                    if cursor.description:
-                        columns: list = [col[0] for col in cursor.description]
-                        rows:list = cursor.fetchall()
+            except SpreadsheetIn.DoesNotExist:
+                errors.append(f"No SpreadsheetIn found for label '{in_label}'")
+            except Exception as e:
+                errors.append(f"Unexpected error for label '{in_label}': {str(e)}")
+        
+        
+        if process_sql:
+            try:
+                with connections['temp'].cursor() as temp_cursor:
+                    temp_cursor.execute(process_sql)
+                    if temp_cursor.description:
+                        columns: list = [col[0] for col in temp_cursor.description]
+                        rows: list = temp_cursor.fetchall()
                         results["sql_output"] = {
                             "columns": columns,
                             "rows": rows
                         }
                     else:
                         results["sql_output"] = None
-                except Exception as e:
-                    errors.append(f"SQL execution failed: {str(e)}")
+            except Exception as e:
+                errors.append(f"SQL execution failed: {str(e)}")
 
-            if results["sql_output"]:
-                sql_data: list = [dict(zip(results["sql_output"]["columns"], row)) for row in results["sql_output"]["rows"]]
-            else:
-                sql_data: list = []
+        if results["sql_output"]:
+            sql_data: list = [dict(zip(results["sql_output"]["columns"], row)) for row in results["sql_output"]["rows"]]
+        else:
+            sql_data: list = []
 
-            for out_label in spreadsheet_out_labels:
-                try:
-                    spreadsheet_out = SpreadsheetOut.objects.get(label=out_label)
-                    
-                    write_google_sheet(
-                        spreadsheet_out.spreadsheet.url,
-                        spreadsheet_out.data_cell,
-                        spreadsheet_out.worksheet_id,     
-                        sql_data,
-                        spreadsheet_out.spreadsheet.key.key,
-                    )
+        for out_label in spreadsheet_out_labels:
+            try:
+                spreadsheet_out = SpreadsheetOut.objects.get(label=out_label)
+                
+                write_google_sheet(
+                    spreadsheet_out.spreadsheet.url,
+                    spreadsheet_out.data_cell,
+                    spreadsheet_out.worksheet_id,     
+                    sql_data,
+                    spreadsheet_out.spreadsheet.key.key,
+                )
 
-                except SpreadsheetOut.DoesNotExist:
-                    errors.append(f"No SpreadsheetOut found for label '{out_label}'")
-                except Exception as e:
-                    errors.append(f"Unexpected error for label '{out_label}': {str(e)}")
+            except SpreadsheetOut.DoesNotExist:
+                errors.append(f"No SpreadsheetOut found for label '{out_label}'")
+            except Exception as e:
+                errors.append(f"Unexpected error for label '{out_label}': {str(e)}")
 
     except Exception as e:
         errors.append(f"DB transaction error: {str(e)}")
@@ -405,14 +404,12 @@ def create_temp_table_from_dataframe(table_name: str, col_names: list, df: pd.Da
 
     create_sql_str: str = f"CREATE TABLE {temp_table_name} ({', '.join(c + ' NVARCHAR(MAX)' for c in col_names)});"
     insert_sql_str: str = f"INSERT INTO {temp_table_name} ({', '.join(col_names)}) VALUES ({', '.join(['%s']*len(col_names))})"
-
     insert_values: list = [tuple(x) for x in df[col_names].astype(str).values.tolist()]
 
-
-    with connection.cursor() as cursor:
+    with connections['temp'].cursor() as cursor:
         cursor.execute(create_sql_str)
-        cursor.executemany(insert_sql_str, [tuple(x) for x in insert_values])
-        cursor.commit()
+        cursor.executemany(insert_sql_str, insert_values)
+        cursor.connection.commit()
 
 
 @api_view(['POST'])

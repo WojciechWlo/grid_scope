@@ -84,8 +84,20 @@ DATABASES = {
     'default': {
         'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
         'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
-        'USER': os.environ.get("DB_USER", "sa"),
-        'PASSWORD': os.environ.get("DB_PASSWORD", "YourStrong!Passw0rd"),
+        'USER': os.environ.get("TECH_USER", "tech_user"),
+        'PASSWORD': os.environ.get("TECH_USER_PASSWORD", "tech_password123!"),
+        'HOST': os.environ.get("DB_HOST", "mssql"),
+        'PORT': os.environ.get("DB_PORT", "1433"),
+        'OPTIONS': {
+            'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+            'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
+        },
+    },
+    'temp': {
+        'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
+        'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
+        'USER': os.environ.get("TEMP_USER", "temp_user"),
+        'PASSWORD': os.environ.get("TEMP_USER_PASSWORD", "temp_password123!"),
         'HOST': os.environ.get("DB_HOST", "mssql"),
         'PORT': os.environ.get("DB_PORT", "1433"),
         'OPTIONS': {
@@ -153,8 +165,7 @@ SIMPLE_JWT = {
     'LEEWAY': 2,
 }
 
-CORS_ALLOWED_ORIGINS = [
-    os.environ.get("FRONTEND_ADDRESS","http://localhost:3000"),
-]
+frontend_env = os.environ.get("FRONTEND_ADDRESS", "http://localhost:3000")
+CORS_ALLOWED_ORIGINS = [addr.strip() for addr in frontend_env.split(",") if addr.strip()]
 
 FIELD_ENCRYPTION_KEY = os.environ.get("DJANGO_ENCRYPTION_KEY")
