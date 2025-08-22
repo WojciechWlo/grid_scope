@@ -20,5 +20,3 @@ build/
 .env 
 .env.dev
 .env.prod
-
-markers/

@@ -6,7 +6,7 @@ services:
       context: ./grid_scope_backend
     volumes:
       - ./grid_scope_backend:/app
-      - ./markers:/markers
+      - /markers
     ports:
       - "${BACKEND_PORT}:8000"
     environment:
@@ -59,7 +59,6 @@ services:
       - "${DB_PORT}:1433"
     volumes:
       - mssql_data:/var/opt/mssql
-      - ./initdb.sql:/initdb.sql
     healthcheck:
       test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "${DB_USER}", "-P", "${DB_PASSWORD}", "-N", "-C", "-Q", "SELECT 1"]
       interval: 10s
@@ -69,22 +68,23 @@ services:
       - mssql_backend
 
   mssql-init:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    build:
+      context: ./mssql
+      dockerfile: Dockerfile.dev
     depends_on:
       mssql:
         condition: service_healthy
     volumes:
-      - ./initdb.sql:/initdb.sql
-      - ./markers:/markers
+      - /markers
     entrypoint: >
       /bin/bash -c "
       if [ ! -f /markers/mssql_initdb_dev ]; then
-          echo 'Initializing database...'
-          /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql
-          touch /markers/mssql_initdb_dev
-          echo 'Initialization done.'
+          echo 'Initializing database...';
+          /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql;
+          touch /markers/mssql_initdb_dev;
+          echo 'Initialization done.';
       else
-          echo 'Database already initialized. Skipping.'
+          echo 'Database already initialized. Skipping.';
       fi
       "
     networks:

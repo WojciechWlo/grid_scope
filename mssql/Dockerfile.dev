@@ -1,0 +1,8 @@
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+USER root
+RUN mkdir -p /markers && chown mssql:mssql /markers
+
+USER mssql
+
+COPY initdb.sql /initdb.sql

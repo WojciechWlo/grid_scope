@@ -6,15 +6,7 @@
 
 Go to project folder and run in console:
 ```
-docker compose up --build
-```
-Next, in backend container run:
-```
-./entrypoint.sh
-```
-To run Django app, at the end run:
-```
-python manage.py runserver 0.0.0.0:8000
+docker compose -f docker-compose.dev.yaml --env-file .env.dev up --build
 ```
 
 # Note
