@@ -22,6 +22,8 @@ GO
 ALTER ROLE db_datareader ADD MEMBER tech_user;
 ALTER ROLE db_datawriter ADD MEMBER tech_user;
 GO
+ALTER ROLE db_owner ADD MEMBER tech_user;
+GO
 
 IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = 'temp_user')
 BEGIN

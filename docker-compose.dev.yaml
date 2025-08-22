@@ -4,11 +4,9 @@ services:
   backend:
     build:
       context: ./grid_scope_backend
-      dockerfile: Dockerfile.dev
-    env_file: .env.dev
     volumes:
       - ./grid_scope_backend:/app
-      - ./markers/django_init_markers:/django_init_markers
+      - ./markers:/markers
     ports:
       - "${BACKEND_PORT}:8000"
     environment:
@@ -25,17 +23,19 @@ services:
       - DB_NAME=${DB_NAME}
       - DJANGO_ENCRYPTION_KEY=${DJANGO_ENCRYPTION_KEY}
       - FRONTEND_ADDRESS=${FRONTEND_ADDRESS}
-      - MODE=${MODE}
     networks:
       - infisical_backend
       - backend_frontend
       - mssql_backend
+    env_file:
+      - .env.dev     
+    depends_on:
+      mssql-init:
+        condition: service_completed_successfully      
 
   frontend:
     build:
       context: ./grid_scope_frontend
-      dockerfile: Dockerfile.dev
-    env_file: .env.dev
     volumes:
       - ./grid_scope_frontend:/app
       - /app/node_modules
@@ -45,15 +45,12 @@ services:
       - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
       - WATCHPACK_POLLING=${WATCHPACK_POLLING}
       - REACT_APP_BACKEND_ADDRESS=${BACKEND_ADDRESS}
-      - MODE=${MODE}
     networks:
       - backend_frontend
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
-    env_file:
-      - .env.dev
     environment:
       - ACCEPT_EULA=${ACCEPT_EULA}
       - SA_PASSWORD=${DB_PASSWORD}
@@ -78,15 +75,16 @@ services:
         condition: service_healthy
     volumes:
       - ./initdb.sql:/initdb.sql
-      - mssql_data:/var/opt/mssql
-      - ./markers/mssql_init_markers:/mssql_init_markers
+      - ./markers:/markers
     entrypoint: >
       /bin/bash -c "
-      if [ ! -f /mssql_init_markers/.initdb_done_dev ]; then
-          /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql &&
-          touch /mssql_init_markers/.initdb_done_dev
+      if [ ! -f /markers/mssql_initdb_dev ]; then
+          echo 'Initializing database...'
+          /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql
+          touch /markers/mssql_initdb_dev
+          echo 'Initialization done.'
       else
-          echo 'Database already initialized – skipping.'
+          echo 'Database already initialized. Skipping.'
       fi
       "
     networks:

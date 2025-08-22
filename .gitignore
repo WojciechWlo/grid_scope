@@ -16,6 +16,9 @@ build/
 
 # Django
 *.sqlite3
+
 .env 
 .env.dev
 .env.prod
+
+markers/

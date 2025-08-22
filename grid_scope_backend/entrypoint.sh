@@ -1,19 +1,34 @@
 #!/bin/sh
 # entrypoint.sh
 
-./wait-for-it.sh
+case "$MODE" in
+  development)
+    MARKER_FILE="/markers/django_init_migrations_dev"
+    ;;
+  production)
+    MARKER_FILE="/markers/django_init_migrations_prod"
+    ;;
+  *)
+    echo "Unknown MODE='$MODE', defaulting to development."
+    MARKER_FILE="/markers/django_init_migrations_dev"
+    ;;
+esac
 
-export RUN_MIGRATIONS=1
-python manage.py makemigrations
-python manage.py migrate
+if [ ! -f "$MARKER_FILE" ]; then
+    echo "Running Django migrations for MODE='$MODE'..."
+    
+    python manage.py makemigrations
+    python manage.py migrate
+    
+    ./drop-token-constraint.sh
+    python manage.py migrate
+    ./generate-token-constraint.sh
+    ./create-super-user.sh
 
-./drop-token-constraint.sh
-
-python manage.py migrate
-
-./generate-token-constraint.sh
-
-./create-super-user.sh
-unset RUN_MIGRATIONS
+    touch "$MARKER_FILE"
+    echo "Migrations and initialization completed for MODE='$MODE'."
+else
+    echo "Marker file exists for MODE='$MODE' – skipping migrations."
+fi
 
 exec "$@"
