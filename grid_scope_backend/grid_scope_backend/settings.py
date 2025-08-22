@@ -80,32 +80,49 @@ WSGI_APPLICATION = 'grid_scope_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
-        'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
-        'USER': os.environ.get("TECH_USER", "tech_user"),
-        'PASSWORD': os.environ.get("TECH_USER_PASSWORD", "tech_password123!"),
-        'HOST': os.environ.get("DB_HOST", "mssql"),
-        'PORT': os.environ.get("DB_PORT", "1433"),
-        'OPTIONS': {
-            'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
-            'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
-        },
-    },
-    'temp': {
-        'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
-        'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
-        'USER': os.environ.get("TEMP_USER", "temp_user"),
-        'PASSWORD': os.environ.get("TEMP_USER_PASSWORD", "temp_password123!"),
-        'HOST': os.environ.get("DB_HOST", "mssql"),
-        'PORT': os.environ.get("DB_PORT", "1433"),
-        'OPTIONS': {
-            'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
-            'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
-        },
+if os.environ.get("RUN_MIGRATIONS") == "1":
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
+            'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
+            'USER': os.environ.get("DB_USER", "tech_user"),
+            'PASSWORD': os.environ.get("DB_USER_PASSWORD", "YourStrong!Passw0rd"),
+            'HOST': os.environ.get("DB_HOST", "mssql"),
+            'PORT': os.environ.get("DB_PORT", "1433"),
+            'OPTIONS': {
+                'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+                'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
+            },
+        }
     }
-}
+else:
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
+            'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
+            'USER': os.environ.get("TECH_USER", "tech_user"),
+            'PASSWORD': os.environ.get("TECH_USER_PASSWORD", "tech_password123!"),
+            'HOST': os.environ.get("DB_HOST", "mssql"),
+            'PORT': os.environ.get("DB_PORT", "1433"),
+            'OPTIONS': {
+                'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+                'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
+            },
+        },
+        'temp': {
+            'ENGINE': os.environ.get("DB_ENGINE", "mssql"),
+            'NAME': os.environ.get("DB_NAME", "grid_scope_db"),
+            'USER': os.environ.get("TEMP_USER", "temp_user"),
+            'PASSWORD': os.environ.get("TEMP_USER_PASSWORD", "temp_password123!"),
+            'HOST': os.environ.get("DB_HOST", "mssql"),
+            'PORT': os.environ.get("DB_PORT", "1433"),
+            'OPTIONS': {
+                'driver': os.environ.get("DB_DRIVER", "ODBC Driver 18 for SQL Server"),
+                'extra_params': os.environ.get("DB_EXTRA_PARAMS", "TrustServerCertificate=yes"),
+            },
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
