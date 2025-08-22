@@ -32,6 +32,7 @@ api_patterns = [
 ]
 
 urlpatterns = [
+    path("core/", include('core.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(api_patterns)),
 ]

@@ -4,16 +4,13 @@ services:
   backend:
     build:
       context: ./grid_scope_backend
-      dockerfile: Dockerfile.dev
-    container_name: backend_dev         
+      dockerfile: Dockerfile.prod
+    container_name: backend_prod
     volumes:
-      - ./grid_scope_backend:/app
-      - /markers
+      - /markers      
     ports:
       - "${BACKEND_PORT}:8000"
     environment:
-      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED}
-      - PYTHONDONTWRITEBYTECODE=${PYTHONDONTWRITEBYTECODE}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
@@ -30,33 +27,35 @@ services:
       - backend_frontend
       - mssql_backend
     env_file:
-      - .env.dev
+      - .env.prod
     depends_on:
       mssql-init:
-        condition: service_completed_successfully      
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/core/health/"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+      start_period: 10s
 
   frontend:
     build:
       context: ./grid_scope_frontend
-      dockerfile: Dockerfile.dev
-    container_name: frontend_dev         
-    volumes:
-      - ./grid_scope_frontend:/app
-      - /app/node_modules
+      dockerfile: Dockerfile.prod
+      args:
+        REACT_APP_BACKEND_ADDRESS: ${BACKEND_ADDRESS}
+    container_name: frontend_prod
     ports:
-      - "${FRONTEND_PORT}:3000"
-    environment:
-      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
-      - WATCHPACK_POLLING=${WATCHPACK_POLLING}
-      - REACT_APP_BACKEND_ADDRESS=${BACKEND_ADDRESS}
-    env_file:
-      - .env.dev   
+      - "${FRONTEND_PORT}:80"
     networks:
       - backend_frontend
+    depends_on:
+      backend:
+        condition: service_healthy
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: mssql_dev
+    container_name: mssql_prod
     environment:
       - ACCEPT_EULA=${ACCEPT_EULA}
       - SA_PASSWORD=${DB_PASSWORD}
@@ -76,8 +75,8 @@ services:
   mssql-init:
     build:
       context: ./mssql
-      dockerfile: Dockerfile.dev
-    container_name: mssql-init_dev         
+      dockerfile: Dockerfile.prod
+    container_name: mssql-init_prod 
     depends_on:
       mssql:
         condition: service_healthy
@@ -85,10 +84,10 @@ services:
       - /markers
     entrypoint: >
       /bin/bash -c "
-      if [ ! -f /markers/mssql_initdb_dev ]; then
+      if [ ! -f /markers/mssql_initdb_prod ]; then
           echo 'Initializing database...';
           /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql;
-          touch /markers/mssql_initdb_dev;
+          touch /markers/mssql_initdb_prod;
           echo 'Database initialization done.';
       else
           echo 'Database already initialized. Skipping.';
