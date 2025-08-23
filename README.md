@@ -193,7 +193,6 @@ For Linux
 Environment variable | Description | Example value
 ---------------------|-------------|--------------
 PYTHONUNBUFFERED | If set then Python logs are printed in realtime in docker logs | 1
-PYTHONDONTWRITEBYTECODE | If set then Python doesn't generate .pyc files and __pycache__ dirs | 1
 CHOKIDAR_USEPOLLING | | true
 WATCHPACK_POLLING | | true
 ACCEPT_EULA | Flag used for accepting (or refusing) EULA of mssql server | Y

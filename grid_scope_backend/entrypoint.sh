@@ -1,19 +1,7 @@
 #!/bin/sh
 # entrypoint.sh
 
-case "$MODE" in
-  development)
-    MARKER_FILE="/markers/django_init_migrations_dev"
-    ;;
-  production)
-    MARKER_FILE="/markers/django_init_migrations_prod"
-    ;;
-  *)
-    echo "Unknown MODE='$MODE', defaulting to development."
-    MARKER_FILE="/markers/django_init_migrations_dev"
-    ;;
-esac
-
+MARKER_FILE="/markers/django_init_migrations_dev"
 if [ ! -f "$MARKER_FILE" ]; then
     echo "Running Django migrations for MODE='$MODE'..."
     
@@ -25,10 +13,14 @@ if [ ! -f "$MARKER_FILE" ]; then
     ./generate-token-constraint.sh
     ./create-super-user.sh
 
-    touch "$MARKER_FILE"
+    if [ "$MODE" = "development" ]; then
+        touch "$MARKER_FILE"
+        echo "Marker created for MODE='$MODE'."
+    fi
+
     echo "Migrations and initialization completed for MODE='$MODE'."
 else
-    echo "Marker file exists for MODE='$MODE' – skipping migrations."
+    echo "Marker file exists – skipping migrations."
 fi
 
 exec "$@"

@@ -5,9 +5,7 @@ services:
     build:
       context: ./grid_scope_backend
       dockerfile: Dockerfile.prod
-    container_name: backend_prod
-    volumes:
-      - /markers      
+    container_name: backend_prod     
     ports:
       - "${BACKEND_PORT}:8000"
     environment:
@@ -80,18 +78,12 @@ services:
     depends_on:
       mssql:
         condition: service_healthy
-    volumes:
-      - /markers
     entrypoint: >
       /bin/bash -c "
-      if [ ! -f /markers/mssql_initdb_prod ]; then
-          echo 'Initializing database...';
-          /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql;
-          touch /markers/mssql_initdb_prod;
-          echo 'Database initialization done.';
-      else
-          echo 'Database already initialized. Skipping.';
-      fi
+        echo 'Initializing database...';
+        /opt/mssql-tools18/bin/sqlcmd -S mssql -U ${DB_USER} -P ${DB_PASSWORD} -N -C -i /initdb.sql;
+        touch /markers/mssql_initdb_prod;
+        echo 'Database initialization done.';
       "
     networks:
       - mssql

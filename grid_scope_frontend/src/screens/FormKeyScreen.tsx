@@ -99,7 +99,7 @@ function FormKeyScreen() {
 					<Form.Label>
 						Key
 					</Form.Label>
-					<Form.Control type='text' placeholder='Enter Key' value={key} onChange={(e)=>setKey(e.target.value)}>
+					<Form.Control as='textarea' rows={10} placeholder='Enter Key' value={key} onChange={(e)=>setKey(e.target.value)}>
 
 					</Form.Control>
 				</Form.Group>
