@@ -14,7 +14,7 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getSpreadsheetsIn(request):
-    spreadsheetsIn = SpreadsheetIn.objects.all()
+    spreadsheetsIn = SpreadsheetIn.objects.all().order_by('-id')
 
     page: str = request.query_params.get('page')
 

@@ -35,7 +35,7 @@ function FormKeyScreen() {
 		if(isEdit){
 			dispatch(getKey(params.id))
 		}
-	},[dispatch])
+	},[dispatch, isEdit, params.id])
 
 	useEffect(() => {
 		if (isEdit && keyResponse) {
@@ -58,7 +58,7 @@ function FormKeyScreen() {
 			navigate(`/keylist`)
 		}
 
-	},[response, responeEdit, navigate])
+	},[response, responeEdit, navigate, isEdit, dispatch])
 
 	const submitHandler=(e: React.FormEvent<HTMLFormElement>)=>{
 		e.preventDefault()

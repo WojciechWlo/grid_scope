@@ -21,7 +21,7 @@ from django.db import connection, connections
 @permission_classes([IsAuthenticated])
 def getProcesses(request):
 
-    process = Process.objects.all()
+    process = Process.objects.all().order_by('-id')
 
     page:str = request.query_params.get('page')
 

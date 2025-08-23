@@ -12,7 +12,7 @@ from rest_framework import status
 @permission_classes([IsAuthenticated])
 def getKeys(request):
 
-    keys = Key.objects.all()
+    keys = Key.objects.all().order_by('-id')
 
     page: str = request.query_params.get('page')
 
