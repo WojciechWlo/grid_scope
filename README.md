@@ -140,11 +140,16 @@ docker compose -f docker-compose.prod.yaml --env-file .env.prod up --build
 
 ## 🗒️ Note
 
-Remember to change any secrets from .env both after clonning repository and after creating containers!
+Remember to change any secrets from .env.dev and .env.prod both after clonning repository and after creating containers!
 
 Django Secret key Generate:
 ```
 python -c "from django.core.management.utils import get_random_secret_key; print('django-insecure-' + get_random_secret_key())"
+```
+
+Django Encryption key Generate:
+```
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
 ## ⏳ Future Work
