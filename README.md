@@ -102,6 +102,7 @@ For Linux
 ## ⚙️ Setup
 Environment variable | Description | Example value
 ---------------------|-------------|--------------
+MODE | Parameter to set if project is in development or production mode | development
 PYTHONUNBUFFERED | If set then Python logs are printed in realtime in docker logs | 1
 CHOKIDAR_USEPOLLING | | true
 WATCHPACK_POLLING | | true
