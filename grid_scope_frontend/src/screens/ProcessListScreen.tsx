@@ -28,10 +28,10 @@ function ProcessListScreen() {
     const {loading, error, processes=null, pages, page} = processList
 
     const processDelete = useSelector((state: RootState)=>state.processDelete)
-    const {loading:loadingDelete, error:errorDelete, response:responseDelete} = processDelete
+    const {response:responseDelete} = processDelete
 
     const processRun = useSelector((state: RootState)=>state.processRun)
-    const {loading:loadingRun, error:errorRun, response:responseRun} = processRun
+    const {loading:loadingRun} = processRun
 
     let keyword = location.search
 

@@ -28,7 +28,7 @@ function SpreadsheetOutListScreen() {
     const { loading, error, spreadsheetsOut = null, pages, page } = spreadsheetOutList;
 
     const spreadsheetOutDelete = useSelector((state: RootState) => state.spreadsheetOutDelete);
-    const { loading: loadingDelete, error: errorDelete, response: responseDelete } = spreadsheetOutDelete;
+    const { response: responseDelete } = spreadsheetOutDelete;
 
     let keyword = location.search;
 

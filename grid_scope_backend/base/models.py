@@ -85,7 +85,7 @@ class SpreadsheetIn(models.Model):
         validators=[validate_excel_range],
         help_text="Enter a valid Excel range, e.g., A1:XFD1048576"
     )
-    worksheet_id = models.IntegerField(null=False, blank=False,validators=[MinValueValidator(0)])    
+    worksheet_name = models.CharField(max_length=100,null=False, blank=False)    
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="spreadsheetsin_created") 
     updated_at = models.DateTimeField(auto_now=True)
@@ -102,7 +102,7 @@ class SpreadsheetOut(models.Model):
         validators=[validate_excel_cell],
         help_text="Enter a valid Excel cell, e.g., B12"
     )
-    worksheet_id = models.IntegerField(null=False, blank=False,validators=[MinValueValidator(0)])
+    worksheet_name = models.CharField(max_length=100,null=False, blank=False)    
     created_at = models.DateTimeField(auto_now_add=True)
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False,related_name="spreadsheetsout_created") 
     updated_at = models.DateTimeField(auto_now=True)

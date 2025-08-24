@@ -28,7 +28,7 @@ function FormSpreadsheetOutScreen() {
     const [label, setLabel] = useState('');
     const [spreadsheetLabel, setSpreadsheetLabel] = useState('');
     const [dataCell, setDataCell] = useState('');
-    const [worksheetId, setWorksheetId] = useState(0)
+    const [worksheetName, setworksheetName] = useState('')
 
     type OptionType = { value: string; label: string };
 
@@ -45,7 +45,6 @@ function FormSpreadsheetOutScreen() {
     const { loading: loadingSpreadsheetList, error: errorSpreadsheetList, spreadsheets = null } = spreadsheetList;
 
     const userLogin = useSelector((state: RootState) => state.userLogin);
-    const { userInfo } = userLogin;
 
     useEffect(()=>{
         dispatch(listSpreadsheets("?page=0"))
@@ -60,7 +59,7 @@ function FormSpreadsheetOutScreen() {
             setLabel(spreadsheetOutResponse.label);
             setSpreadsheetLabel(spreadsheetOutResponse.spreadsheet);
             setDataCell(spreadsheetOutResponse.data_cell);
-            setWorksheetId(spreadsheetOutResponse.worksheet_id);
+            setworksheetName(spreadsheetOutResponse.worksheet_id);
         }
     }, [spreadsheetOutResponse, isEdit]);
 
@@ -87,14 +86,14 @@ function FormSpreadsheetOutScreen() {
                 label,
                 spreadsheet_label:spreadsheetLabel,
                 data_cell: dataCell,
-                worksheet_id: worksheetId,
+                worksheet_name: worksheetName,
             },params.id))
         }else{
             dispatch(createSpreadsheetOut({
                 label,
                 spreadsheet_label:spreadsheetLabel,
                 data_cell: dataCell,
-                worksheet_id: worksheetId,
+                worksheet_name: worksheetName,
             }))
         }
     };
@@ -153,9 +152,9 @@ function FormSpreadsheetOutScreen() {
 
                 <Form.Group controlId='label'>
                     <Form.Label>
-                        Worksheet Id
+                        Worksheet Name
                     </Form.Label>
-                    <Form.Control type='number' placeholder='Enter Worksheet Id' value={worksheetId} onChange={(e)=>setWorksheetId(Number(e.target.value))}>
+                    <Form.Control type='text' placeholder='Enter Worksheet Name' value={worksheetName} onChange={(e)=>setworksheetName(e.target.value)}>
 
                     </Form.Control>
                 </Form.Group>

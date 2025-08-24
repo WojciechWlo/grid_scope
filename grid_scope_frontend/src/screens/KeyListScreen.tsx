@@ -28,7 +28,7 @@ function KeyListScreen() {
     const {loading, error, keys=null, pages, page} = keyList
 
     const keyDelete = useSelector((state: RootState)=>state.keyDelete)
-    const {loading:loadingDelete, error:errorDelete, response:responseDelete} = keyDelete
+    const {response:responseDelete} = keyDelete
 
     let keyword = location.search
 

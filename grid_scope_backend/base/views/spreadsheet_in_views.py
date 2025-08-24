@@ -50,11 +50,11 @@ def createSpreadsheetIn(request):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell_range: str = data.get('data_cell_range')
-    worksheet_id: int = data.get('worksheet_id')
+    worksheet_name: str = data.get('worksheet_name')
 
-    if not label or not spreadsheet_label or not data_cell_range or worksheet_id==None:
+    if not label or not spreadsheet_label or not data_cell_range or worksheet_name==None:
         response = Response(
-            {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label, data cell range or worksheet id."},
+            {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label, data cell range or worksheet name."},
             status=status.HTTP_400_BAD_REQUEST
         )
         return response
@@ -98,7 +98,7 @@ def createSpreadsheetIn(request):
         updating_user=user,
         spreadsheet=spreadsheet_instance,
         data_cell_range=data_cell_range,
-        worksheet_id=worksheet_id
+        worksheet_name=worksheet_name
     )
 
     response = Response({"detail": "Input Spreadsheet has been created"})
@@ -114,7 +114,7 @@ def editSpreadsheetIn(request, pk):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell_range: str = data.get('data_cell_range')
-    worksheet_id: int = data.get('worksheet_id')
+    worksheet_name: str = data.get('worksheet_name')
 
     try:
         spreadsheet_in = SpreadsheetIn.objects.get(pk=pk)
@@ -125,7 +125,7 @@ def editSpreadsheetIn(request, pk):
         )
         return response
     
-    if not label or not spreadsheet_label or not data_cell_range or worksheet_id==None:
+    if not label or not spreadsheet_label or not data_cell_range or worksheet_name==None:
         response = Response(
             {"detail": "Input Spreadsheet could not be created. Missing label, spreadsheet label, data cell range or worksheet id."},
             status=status.HTTP_400_BAD_REQUEST
@@ -157,7 +157,7 @@ def editSpreadsheetIn(request, pk):
     spreadsheet_in.spreadsheet = spreadsheet_instance
     spreadsheet_in.data_cell_range = data_cell_range
     spreadsheet_in.updating_user = user
-    spreadsheet_in.worksheet_id = worksheet_id
+    spreadsheet_in.worksheet_name = worksheet_name
     spreadsheet_in.save()
 
     response = Response({"detail": "Input Spreadsheet has been updated"})

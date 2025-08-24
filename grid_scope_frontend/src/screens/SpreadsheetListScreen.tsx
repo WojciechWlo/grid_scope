@@ -29,7 +29,7 @@ function SpreadsheetListScreen() {
     const {loading, error, spreadsheets=null, pages, page} = spreadsheetList
 
     const spreadsheetDelete = useSelector((state: RootState)=>state.spreadsheetDelete)
-    const {loading:loadingDelete, error:errorDelete, response:responseDelete} = spreadsheetDelete
+    const {response:responseDelete} = spreadsheetDelete
 
     let keyword = location.search
 

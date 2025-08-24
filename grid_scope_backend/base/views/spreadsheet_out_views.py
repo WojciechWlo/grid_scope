@@ -49,9 +49,9 @@ def createSpreadsheetOut(request):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell: str = data.get('data_cell')
-    worksheet_id: int = data.get('worksheet_id')
+    worksheet_name: str = data.get('worksheet_name')
 
-    if not label or not spreadsheet_label or not data_cell or worksheet_id==None:
+    if not label or not spreadsheet_label or not data_cell or worksheet_name==None:
         response = Response(
             {"detail": "Output Spreadsheet could not be created. Missing label, spreadsheet label, data cell or worksheet id."},
             status=status.HTTP_400_BAD_REQUEST
@@ -98,7 +98,7 @@ def createSpreadsheetOut(request):
         updating_user=user,        
         spreadsheet=spreadsheet_instance,
         data_cell=data_cell,
-        worksheet_id=worksheet_id
+        worksheet_name=worksheet_name
     )
 
     response = Response({"detail": "Output Spreadsheet has been created"})
@@ -114,7 +114,7 @@ def editSpreadsheetOut(request, pk):
     label: str = data.get('label')
     spreadsheet_label: str = data.get('spreadsheet_label')
     data_cell: str = data.get('data_cell')
-    worksheet_id: int = data.get('worksheet_id')
+    worksheet_name: str = data.get('worksheet_name')
 
 
     try:
@@ -126,7 +126,7 @@ def editSpreadsheetOut(request, pk):
         )
         return response
  
-    if not label or not spreadsheet_label or not data_cell or worksheet_id==None:
+    if not label or not spreadsheet_label or not data_cell or worksheet_name==None:
         response = Response(
             {"detail": "Output Spreadsheet could not be created. Missing label, spreadsheet label, data cell or worksheet id."},
             status=status.HTTP_400_BAD_REQUEST
@@ -162,7 +162,7 @@ def editSpreadsheetOut(request, pk):
     spreadsheet_out.spreadsheet = spreadsheet_instance
     spreadsheet_out.data_cell = data_cell
     spreadsheet_out.updating_user = user
-    spreadsheet_out.worksheet_id = worksheet_id
+    spreadsheet_out.worksheet_name = worksheet_name
     spreadsheet_out.save()
 
     response = Response({"detail": "Output Spreadsheet has been updated"})

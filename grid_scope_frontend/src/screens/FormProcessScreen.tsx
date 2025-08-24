@@ -60,7 +60,6 @@ function FormProcessScreen() {
 	const {loading:loadingSpreadsheetOutList, error:errorSpreadsheetOutList, spreadsheetsOut=null} = spreadsheetOutList
 
 	const userLogin = useSelector((state: RootState)=>state.userLogin)
-	const {userInfo} = userLogin
 	
 	useEffect(()=>{
 		dispatch(listSpreadsheetsIn("?page=0"))

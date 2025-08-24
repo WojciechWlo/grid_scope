@@ -27,7 +27,7 @@ function FormSpreadsheetInScreen() {
 	const [label, setLabel] = useState('')
 	const [spreadsheetLabel, setSpreadsheetLabel] = useState('')
 	const [dataCellRange, setDataCellRange] = useState('')
-	const [worksheetId, setWorksheetId] = useState(0)
+	const [worksheetName, setWorksheetName] = useState('')
 
     const dispatch = useDispatch<AppDispatch>()
 	type OptionType = { value: string; label: string };
@@ -45,8 +45,7 @@ function FormSpreadsheetInScreen() {
 	const {loading:loadingSpreadsheetList, error:errorSpreadsheetList, spreadsheets=null} = spreadsheetList
 
 	const userLogin = useSelector((state: RootState)=>state.userLogin)
-	const {userInfo} = userLogin
-	
+
 	useEffect(()=>{
 		dispatch(listSpreadsheets("?page=0"))
 		if(isEdit)
@@ -60,7 +59,7 @@ function FormSpreadsheetInScreen() {
 			setLabel(spreadsheetInResponse.label);
 			setSpreadsheetLabel(spreadsheetInResponse.spreadsheet);
 			setDataCellRange(spreadsheetInResponse.data_cell_range);
-            setWorksheetId(spreadsheetInResponse.worksheet_id);			
+            setWorksheetName(spreadsheetInResponse.worksheet_id);			
 		}
 	}, [spreadsheetInResponse, isEdit]);
 
@@ -88,14 +87,14 @@ function FormSpreadsheetInScreen() {
 				label,
 				spreadsheet_label:spreadsheetLabel,
 				data_cell_range: dataCellRange,
-				worksheet_id: worksheetId,
+				worksheet_name: worksheetName,
 			},params.id))
 		}else{
 			dispatch(createSpreadsheetIn({
 				label,
 				spreadsheet_label:spreadsheetLabel,
 				data_cell_range: dataCellRange,
-				worksheet_id: worksheetId,
+				worksheet_name: worksheetName,
 			}))
 		}
 
@@ -157,9 +156,9 @@ function FormSpreadsheetInScreen() {
 
 				<Form.Group controlId='label'>
 					<Form.Label>
-						Worksheet Id
+						Worksheet Name
 					</Form.Label>
-					<Form.Control type='number' placeholder='Enter Worksheet Id' value={worksheetId} onChange={(e)=>setWorksheetId(Number(e.target.value))}>
+					<Form.Control type='text' placeholder='Enter Worksheet Name' value={worksheetName} onChange={(e)=>setWorksheetName(e.target.value)}>
 
 					</Form.Control>
 				</Form.Group>

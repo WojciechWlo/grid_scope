@@ -44,7 +44,6 @@ function FormSpreadsheetScreen() {
 	const {loading:loadingKeyList, error:errorKeyList, keys=null} = keyList
 
 	const userLogin = useSelector((state: RootState)=>state.userLogin)
-	const {userInfo} = userLogin
 	
 	useEffect(()=>{
 		dispatch(listKeys("?page=0"))

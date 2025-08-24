@@ -54,7 +54,7 @@ type SpreadsheetInType={
     label:string, 
     spreadsheet_label:string,
     data_cell_range: string,
-    worksheet_id: number,
+    worksheet_name: string,
 }
 
 export const createSpreadsheetIn = (spreadsheetInCreate: SpreadsheetInType) => async (dispatch: AppDispatch, getState: ()=>RootState) => {
