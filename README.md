@@ -20,21 +20,23 @@ issues | pull requests | activity | contributors | stars | forks | licence
 
 
 ## 📑 Table of Contents
-- [🚀 About](#about)
-- [🏛️ Architecture](#architecture)
-  - [🏛️ High Level Design](#high-level-design)
-  - [🔗 Data Model](#data-model)
-  - [📋 Setup Phase](#setup-phase)
-  - [🔄 Execution Phase](#execution-phase)
-- [🧰 Techstack](#techstack)
-- [📝 Prerequisites](#prerequisites)
-- [⚙️ Setup](#setup)
-- [⚡ Getting Started](#getting-started)
-- [🗒️ Note](#note)
-- [⏳ Future Work](#future-work)
-- [🤝 Feedback and Contributions](#feedback-and-contributions)
-- [📄 License](#license)
-- [🗨️ Contact](#contact)
+- [🚀 About](#-about)
+- [🏛️ Architecture](#%EF%B8%8F-architecture)
+  - [🏛️ High Level Design](#%EF%B8%8F-high-level-design)
+  - [🔗 Data Model](#-data-model)
+  - [📋 Setup Phase](#-setup-phase)
+  - [🔄 Execution Phase](#-execution-phase)
+- [🧰 Techstack](#-techstack)
+  - [🔧 Backend](#-backend)
+  - [🖼️ Frontend](#-frontend)
+- [📝 Prerequisites](#-prerequisites)
+- [⚙️ Setup](#%EF%B8%8F-setup)
+- [⚡ Getting Started](#-getting-started)
+- [🗒️ Note](#%EF%B8%8F-note)
+- [⏳ Future Work](#-future-work)
+- [🤝 Feedback and Contributions](#-feedback-and-contributions)
+- [📄 License](#-license)
+- [🗨️ Contact](#%EF%B8%8F-contact)
 
 
 
@@ -55,16 +57,16 @@ All data (specifically the processes) are preserved and may be quickly executed 
 Here is architecture of Grid Scope
 
 ### 🏛️ High Level Design
-![Architecture](src\grid_scope-Architecture.jpg)
+![Architecture](src/grid_scope-Architecture.jpg)
 
 ### 🔗 Data Model
-![Data-Model](src\grid_scope-Data-Model.jpg)
+![Data-Model](src/grid_scope-Data-Model.jpg)
 
 ### 📋 Setup Phase
-![Setup-Phase](src\grid_scope-Setup-Phase.jpg)
+![Setup-Phase](src/grid_scope-Setup-Phase.jpg)
 
 ### 🔄 Execution Phase
-![Execution-Phase](src\grid_scope-Execution-Phase.jpg)
+![Execution-Phase](src/grid_scope-Execution-Phase.jpg)
 
 
 
@@ -76,12 +78,12 @@ Here is architecture of Grid Scope
 ![Redux](https://img.shields.io/badge/redux-764ABC?style=flat&logo=redux&logoColor=white)
 ![MS SQL Server](https://img.shields.io/badge/Microsoft_SQL_Server-CC2927?style=flat&logo=microsoftsqlserver&logoColor=white)
 
-### Backend
+### 🔧 Backend
 - **[Python](https://www.python.org/)** - The core programming language for backend development.
 - **[Django](https://www.djangoproject.com/)** - A high-level Python web framework used to build RESTful APIs and handle server-side logic.
 - **[MsSQL Server](https://www.microsoft.com/en-us/sql-server/)** - Relational database management system used to store and manage application data.
 
-### Frontend
+### 🖼️ Frontend
 - **[React](https://reactjs.org/)** - A JavaScript library for building interactive and responsive user interfaces.
 - **[Redux](https://redux.js.org/)** - A predictable state management library for managing application state across React components.
 
@@ -100,7 +102,6 @@ For Linux
 ## ⚙️ Setup
 Environment variable | Description | Example value
 ---------------------|-------------|--------------
-MODE | Parameter to set if project is in development or production mode | development
 PYTHONUNBUFFERED | If set then Python logs are printed in realtime in docker logs | 1
 CHOKIDAR_USEPOLLING | | true
 WATCHPACK_POLLING | | true
@@ -174,6 +175,3 @@ Feel free to reach out to me.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/wojciech-wlodarczak/)
 [![Email](https://img.shields.io/badge/Email-Contact-red?logo=gmail&logoColor=white)](mailto:vojciechandre@gmail.com)
-
-
-
