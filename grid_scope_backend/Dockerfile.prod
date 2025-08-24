@@ -21,4 +21,4 @@ COPY . .
 RUN chmod +x wait-for-it.sh entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["gunicorn", "grid_scope_backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "4", "--timeout", "120"]
+CMD ["gunicorn", "grid_scope_backend.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "4", "--timeout", "120", "--certfile", "/certs/cert.crt", "--keyfile", "/certs/cert.key"]

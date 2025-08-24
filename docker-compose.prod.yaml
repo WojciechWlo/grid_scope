@@ -5,7 +5,7 @@ services:
     build:
       context: ./grid_scope_backend
       dockerfile: Dockerfile.prod
-    container_name: backend_prod     
+    container_name: backend_prod
     ports:
       - "${BACKEND_PORT}:8000"
     environment:
@@ -30,11 +30,13 @@ services:
       mssql-init:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/core/health/"]
+      test: ["CMD", "curl", "--cacert", "/certs/cert.crt", "-f", "https://localhost:8000/core/health/"]
       interval: 10s
       retries: 5
       timeout: 5s
       start_period: 10s
+    volumes:
+      - ./certs:/certs
 
   frontend:
     build:
@@ -44,12 +46,16 @@ services:
         REACT_APP_BACKEND_ADDRESS: ${BACKEND_ADDRESS}
     container_name: frontend_prod
     ports:
-      - "${FRONTEND_PORT}:80"
+      # - "${FRONTEND_PORT}:80"
+      - "${FRONTEND_PORT}:443"
     networks:
       - backend_frontend
     depends_on:
       backend:
         condition: service_healthy
+    volumes:
+      - ./certs:/etc/ssl/certs/
+      - ./certs:/etc/ssl/private/
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest

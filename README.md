@@ -129,11 +129,24 @@ BACKEND_ADDRESS | Url of the backend visible from the browser (not from the cont
 
 ## ⚡ Getting Started
 
-Go to project folder and for development mode run in console:
+### Development
+Go to project folder and run in console:
 ```
 docker compose -f docker-compose.dev.yaml --env-file .env.dev up --build
 ```
-For production mode run:
+
+### Production
+Go to project folder and create folder certs/. In console run command to generate certificates:
+```
+docker run --rm -v .\:/certs alpine/openssl req ^
+  -x509 -nodes -days 365 ^
+  -newkey rsa:2048 ^
+  -keyout /certs/cert.key ^
+  -out /certs/cert.crt ^
+  -subj "/C=PL/ST=P/L=Gdansk/O=None/OU=IT/CN=localhost"
+```
+
+Next, run in console:
 ```
 docker compose -f docker-compose.prod.yaml --env-file .env.prod up --build
 ```
