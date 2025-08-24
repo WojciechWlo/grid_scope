@@ -130,7 +130,21 @@ BACKEND_ADDRESS | Url of the backend visible from the browser (not from the cont
 ## ⚡ Getting Started
 
 ### Development
-Go to project folder and run in console:
+Go to project folder. Change .env.dev_ to .env.dev and .env.prod_ to .env.prod. Generate Keys for Django:
+
+Django Secret key Generate:
+```
+python -c "from django.core.management.utils import get_random_secret_key; print('django-insecure-' + get_random_secret_key())"
+```
+
+Django Encryption key Generate:
+```
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Copy both keys to SECRET_KEY and DJANGO_ENCRYPTION_KEY in .env.dev/.env.prod files.
+
+Next, generate certificate. Run in console:
 ```
 docker compose -f docker-compose.dev.yaml --env-file .env.dev up --build
 ```
@@ -154,16 +168,6 @@ docker compose -f docker-compose.prod.yaml --env-file .env.prod up --build
 ## 🗒️ Note
 
 Remember to change any secrets from .env.dev and .env.prod both after clonning repository and after creating containers!
-
-Django Secret key Generate:
-```
-python -c "from django.core.management.utils import get_random_secret_key; print('django-insecure-' + get_random_secret_key())"
-```
-
-Django Encryption key Generate:
-```
-python -c "import secrets; print(secrets.token_urlsafe(32))"
-```
 
 ## ⏳ Future Work
 This is not the end of the project. There is still a lot stuffs to add!
