@@ -7,10 +7,10 @@ function PrivateRoute({children}:{children: ReactNode}) {
 	
 	const redirect = "/login"
 
-    const userLogin = useSelector((state: RootState)=>state.userLogin)
-    const {userInfo} = userLogin
+	const authTokens = useSelector((state: RootState)=>state.authTokens)
+	const {tokens} = authTokens
 
-	if (!userInfo) {
+	if (!tokens) {
 		return <Navigate to={redirect} replace />
 	}
 

@@ -44,7 +44,6 @@ function App() {
 									<Route path='/addkey' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
 									<Route path='/addprocess' element={<PrivateRoute><FormProcessScreen/></PrivateRoute>} />									
 									<Route path='/editkey/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
-									<Route path='/editspreadsheet/:id' element={<PrivateRoute><FormKeyScreen/></PrivateRoute>} />
 									<Route path='/editprocess/:id' element={<PrivateRoute><FormProcessScreen/></PrivateRoute>} />
 									<Route path='/processlist' element={<PrivateRoute><ProcessListScreen/></PrivateRoute>} />
 								</Routes>
