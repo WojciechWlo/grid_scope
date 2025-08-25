@@ -59,7 +59,7 @@ function FormSpreadsheetInScreen() {
 			setLabel(spreadsheetInResponse.label);
 			setSpreadsheetLabel(spreadsheetInResponse.spreadsheet);
 			setDataCellRange(spreadsheetInResponse.data_cell_range);
-            setWorksheetName(spreadsheetInResponse.worksheet_id);			
+            setWorksheetName(spreadsheetInResponse.worksheet_name);			
 		}
 	}, [spreadsheetInResponse, isEdit]);
 

@@ -14,7 +14,7 @@ type SpreadsheetIn={
     label: string,
     spreadsheet: string,
     data_cell_range: string,
-    worksheet_id: number,
+    worksheet_name: string,
 }
 
 function SpreadsheetInListScreen() {
@@ -90,7 +90,7 @@ function SpreadsheetInListScreen() {
                                         <td>{spreadsheetIn.label}</td>
                                         <td>{spreadsheetIn.spreadsheet}</td>
                                         <td>{spreadsheetIn.data_cell_range}</td>              
-                                        <td>{spreadsheetIn.worksheet_id}</td>                                                                     
+                                        <td>{spreadsheetIn.worksheet_name}</td>                                                                     
                                         <td>
                                             <Button variant='light' className='btn-sm' onClick={()=>editSpreadsheetInHandler(spreadsheetIn.id)}>
                                                 <i className='fas fa-edit'></i>
