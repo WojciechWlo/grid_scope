@@ -75,7 +75,7 @@ function SpreadsheetOutListScreen() {
                                 <th>LABEL</th>
                                 <th>SPREADSHEET</th>
                                 <th>DATA CELL</th>
-                                <th>WORKSHEET ID</th>
+                                <th>WORKSHEET NAME</th>
                                 <th></th>
                             </tr>
                         </thead>

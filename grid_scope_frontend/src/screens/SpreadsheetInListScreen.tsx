@@ -78,7 +78,7 @@ function SpreadsheetInListScreen() {
                                     <th>LABEL</th>
                                     <th>SPREADSHEET</th>
                                     <th>DATA CELL RANGE</th>
-                                    <th>WORKSHEET ID</th>
+                                    <th>WORKSHEET NAME</th>
                                     <th></th>
                                 </tr>
 
